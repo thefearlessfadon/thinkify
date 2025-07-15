@@ -1,0 +1,75 @@
+<!-- share.html -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thinkify - Fikir Paylaş</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Thinkify</h1>
+    <nav>
+      <a href="/">Anasayfa</a>
+      <a href="/paylas">Fikir Paylaş</a>
+      <a href="/profil">Profil</a>
+      <a href="/pro">Pro</a>
+      <a href="/giris" id="auth-link">Giriş</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Fikir Paylaş</h2>
+    <form id="share-form">
+      <input type="text" id="title" placeholder="Başlık" required>
+      <textarea id="description" placeholder="Açıklama" required></textarea>
+      <select id="category" required>
+        <option value="" disabled selected>Kategori seçin</option>
+        <option value="Teknoloji">Teknoloji</option>
+        <!-- Add more categories -->
+      </select>
+      <button type="submit">Paylaş</button>
+    </form>
+  </main>
+  <script type="module">
+    import { auth, db } from './scripts/firebase.js';
+    import { addDoc, collection, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const shareForm = document.getElementById('share-form');
+    const authLink = document.getElementById('auth-link');
+
+    onAuthStateChanged(auth, user => {
+      authLink.textContent = user ? 'Çıkış' : 'Giriş';
+      authLink.href = user ? '#' : '/giris';
+      if (!user) {
+        alert('Fikir paylaşmak için giriş yapmalısınız!');
+        window.location.href = '/giris';
+      }
+      if (user && authLink.textContent === 'Çıkış') {
+        authLink.onclick = () => import('./scripts/auth.js').then(module => module.logout());
+      }
+    });
+
+    shareForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const description = document.getElementById('description').value;
+      const category = document.getElementById('category').value;
+      const user = auth.currentUser;
+      const userDoc = await getDoc(doc(db, 'kullanicilar', user.uid));
+      await addDoc(collection(db, 'fikirler'), {
+        baslik: title,
+        aciklama: description,
+        kategori: category,
+        olusturanId: user.uid,
+        olusturanKullaniciAdi: userDoc.data().kullaniciAdi,
+        oySayisi: 0,
+        yorumSayisi: 0,
+        tarih: new Date()
+      });
+      window.location.href = '/';
+    });
+  </script>
+</body>
+</html>

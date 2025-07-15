@@ -1,0 +1,45 @@
+<!-- pro.html -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thinkify - Pro</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Thinkify</h1>
+    <nav>
+      <a href="/">Anasayfa</a>
+      <a href="/paylas">Fikir Paylaş</a>
+      <a href="/profil">Profil</a>
+      <a href="/pro">Pro</a>
+      <a href="/giris" id="auth-link">Giriş</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Thinkify Pro</h2>
+    <p>Thinkify Pro ile daha fazla özellikten faydalanın:</p>
+    <ul>
+      <li>Gelişmiş analiz: Fikirlerinizin performansını detaylı görün.</li>
+      <li>Daha fazla kategori: Fikirlerinizi daha spesifik kategorilere ayırın.</li>
+      <li>Öne çıkarma: Fikirlerinizi daha fazla kişiye ulaştırın.</li>
+    </ul>
+    <p>Pro özellikler yakında aktif olacak! Daha fazla bilgi için <a href="https://x.ai/grok">bizi takip edin</a>.</p>
+  </main>
+  <script type="module">
+    import { auth } from './scripts/firebase.js';
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const authLink = document.getElementById('auth-link');
+    onAuthStateChanged(auth, user => {
+      authLink.textContent = user ? 'Çıkış' : 'Giriş';
+      authLink.href = user ? '#' : '/giris';
+      if (user && authLink.textContent === 'Çıkış') {
+        authLink.onclick = () => import('./scripts/auth.js').then(module => module.logout());
+      }
+    });
+  </script>
+</body>
+</html>

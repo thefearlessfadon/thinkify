@@ -1,0 +1,77 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thinkify - Anasayfa</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Thinkify</h1>
+    <nav>
+      <a href="/">Anasayfa</a>
+      <a href="/paylas">Fikir Paylaş</a>
+      <a href="/profil">Profil</a>
+      <a href="/pro">Pro</a>
+      <a href="/giris" id="auth-link">Giriş</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Popüler Fikirler</h2>
+    <select id="filter">
+      <option value="popular">Popüler</option>
+      <option value="new">Yeni</option>
+      <option value="teknoloji">Teknoloji</option>
+      <!-- Add more categories as needed -->
+    </select>
+    <div id="ideas-container"></div>
+  </main>
+  <script type="module">
+    import { auth, db } from './scripts/firebase.js';
+    import { collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const ideasContainer = document.getElementById('ideas-container');
+    const filter = document.getElementById('filter');
+    const authLink = document.getElementById('auth-link');
+
+    onAuthStateChanged(auth, user => {
+      authLink.textContent = user ? 'Çıkış' : 'Giriş';
+      authLink.href = user ? '#' : '/giris';
+      if (user && authLink.textContent === 'Çıkış') {
+        authLink.onclick = () => import('./scripts/auth.js').then(module => module.logout());
+      }
+      loadIdeas();
+    });
+
+    async function loadIdeas() {
+      ideasContainer.innerHTML = '';
+      let q;
+      const filterValue = filter.value;
+      if (filterValue === 'popular') {
+        q = query(collection(db, 'fikirler'), orderBy('oySayisi', 'desc'));
+      } else if (filterValue === 'new') {
+        q = query(collection(db, 'fikirler'), orderBy('tarih', 'desc'));
+      } else {
+        q = query(collection(db, 'fikirler'), orderBy('tarih', 'desc')); // Add category filter later
+      }
+      const snapshot = await getDocs(q);
+      snapshot.forEach(doc => {
+        const idea = doc.data();
+        const div = document.createElement('div');
+        div.className = 'idea-card';
+        div.innerHTML = `
+          <h3><a href="/fikir/${doc.id}">${idea.baslik}</a></h3>
+          <p>${idea.aciklama.slice(0, 100)}...</p>
+          <p>Oylar: ${idea.oySayisi || 0} | Yorumlar: ${idea.yorumSayisi || 0}</p>
+        `;
+        ideasContainer.appendChild(div);
+      });
+    }
+
+    filter.addEventListener('change', loadIdeas);
+  </script>
+</body>
+</html>

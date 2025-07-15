@@ -1,0 +1,80 @@
+<!-- profile.html -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thinkify - Profil</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Thinkify</h1>
+    <nav>
+      <a href="/">Anasayfa</a>
+      <a href="/paylas">Fikir Paylaş</a>
+      <a href="/profil">Profil</a>
+      <a href="/pro">Pro</a>
+      <a href="/giris" id="auth-link">Giriş</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Profilim</h2>
+    <div id="profile-info"></div>
+    <h3>Fikirlerim</h3>
+    <div id="user-ideas"></div>
+  </main>
+  <script type="module">
+    import { auth, db } from './scripts/firebase.js';
+    import { doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const profileInfo = document.getElementById('profile-info');
+    const userIdeas = document.getElementById('user-ideas');
+    const authLink = document.getElementById('auth-link');
+
+    onAuthStateChanged(auth, async user => {
+      authLink.textContent = user ? 'Çıkış' : 'Giriş';
+      authLink.href = user ? '#' : '/giris';
+      if (!user) {
+        window.location.href = '/giris';
+        return;
+      }
+      if (authLink.textContent === 'Çıkış') {
+        authLink.onclick = () => import('./scripts/auth.js').then(module => module.logout());
+      }
+      const userDoc = await getDoc(doc(db, 'kullanicilar', user.uid));
+      const userData = userDoc.data();
+      profileInfo.innerHTML = `
+        <p><strong>Kullanıcı Adı:</strong> ${userData.kullaniciAdi}</p>
+        <p><strong>E-posta:</strong> ${user.email}</p>
+        <p><strong>Fikir Sayısı:</strong> ${await getIdeaCount(user.uid)}</p>
+      `;
+      loadUserIdeas(user.uid);
+    });
+
+    async function getIdeaCount(uid) {
+      const q = query(collection(db, 'fikirler'), where('olusturanId', '==', uid));
+      const snapshot = await getDocs(q);
+      return snapshot.size;
+    }
+
+    async function loadUserIdeas(uid) {
+      userIdeas.innerHTML = '';
+      const q = query(collection(db, 'fikirler'), where('olusturanId', '==', uid), orderBy('tarih', 'desc'));
+      const snapshot = await getDocs(q);
+      snapshot.forEach(doc => {
+        const idea = doc.data();
+        const div = document.createElement('div');
+        div.className = 'idea-card';
+        div.innerHTML = `
+          <h3><a href="/fikir/${doc.id}">${idea.baslik}</a></h3>
+          <p>${idea.aciklama.slice(0, 100)}...</p>
+          <p>Oylar: ${idea.oySayisi || 0} | Yorumlar: ${idea.yorumSayisi || 0}</p>
+        `;
+        userIdeas.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>

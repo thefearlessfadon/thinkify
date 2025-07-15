@@ -1,0 +1,123 @@
+<!-- idea.html -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thinkify - Fikir Detayı</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Thinkify</h1>
+    <nav>
+      <a href="/">Anasayfa</a>
+      <a href="/paylas">Fikir Paylaş</a>
+      <a href="/profil">Profil</a>
+      <a href="/pro">Pro</a>
+      <a href="/giris" id="auth-link">Giriş</a>
+    </nav>
+  </header>
+  <main>
+    <div id="idea-details"></div>
+    <div id="vote-buttons">
+      <button id="upvote">+1</button>
+      <button id="downvote">-1</button>
+    </div>
+    <h3>Yorumlar</h3>
+    <textarea id="comment-input" placeholder="Yorum yaz..." disabled></textarea>
+    <button id="comment-submit" disabled>Yorum Yap</button>
+    <div id="comments-container"></div>
+  </main>
+  <script type="module">
+    import { auth, db } from './scripts/firebase.js';
+    import { doc, getDoc, collection, addDoc, getDocs, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const ideaId = window.location.pathname.split('/').pop();
+    const ideaDetails = document.getElementById('idea-details');
+    const upvoteBtn = document.getElementById('upvote');
+    const downvoteBtn = document.getElementById('downvote');
+    const commentInput = document.getElementById('comment-input');
+    const commentSubmit = document.getElementById('comment-submit');
+    const commentsContainer = document.getElementById('comments-container');
+    const authLink = document.getElementById('auth-link');
+
+    onAuthStateChanged(auth, user => {
+      authLink.textContent = user ? 'Çıkış' : 'Giriş';
+      authLink.href = user ? '#' : '/giris';
+      if (user) {
+        commentInput.disabled = false;
+        commentSubmit.disabled = false;
+        upvoteBtn.disabled = false;
+        downvoteBtn.disabled = false;
+        if (authLink.textContent === 'Çıkış') {
+          authLink.onclick = () => import('./scripts/auth.js').then(module => module.logout());
+        }
+      }
+      loadIdea();
+      loadComments();
+    });
+
+    async function loadIdea() {
+      const ideaDoc = await getDoc(doc(db, 'fikirler', ideaId));
+      if (ideaDoc.exists()) {
+        const idea = ideaDoc.data();
+        ideaDetails.innerHTML = `
+          <h2>${idea.baslik}</h2>
+          <p>${idea.aciklama}</p>
+          <p>Kategori: ${idea.kategori}</p>
+          <p>Oylar: ${idea.oySayisi || 0}</p>
+          <p>Yazar: <a href="/profil/${idea.olusturanKullaniciAdi}">${idea.olusturanKullaniciAdi}</a></p>
+        `;
+      }
+    }
+
+    async function loadComments() {
+      commentsContainer.innerHTML = '';
+      const commentsQuery = query(collection(db, `fikirler/${ideaId}/yorumlar`), orderBy('tarih', 'desc'));
+      const snapshot = await getDocs(commentsQuery);
+      snapshot.forEach(doc => {
+        const comment = doc.data();
+        const div = document.createElement('div');
+        div.className = 'comment';
+        div.innerHTML = `
+          <p><strong>${comment.kullaniciAdi}</strong>: ${comment.yorum}</p>
+          <small>${new Date(comment.tarih.toDate()).toLocaleString()}</small>
+        `;
+        commentsContainer.appendChild(div);
+      });
+    }
+
+    upvoteBtn.addEventListener('click', () => vote(1));
+    downvoteBtn.addEventListener('click', () => vote(-1));
+
+    async function vote(value) {
+      if (!auth.currentUser) return alert('Oy vermek için giriş yapmalısınız!');
+      const voteRef = doc(db, `fikirler/${ideaId}/oylar`, auth.currentUser.uid);
+      const ideaRef = doc(db, 'fikirler', ideaId);
+      await setDoc(voteRef, { kullaniciId: auth.currentUser.uid, deger: value });
+      const votesSnapshot = await getDocs(collection(db, `fikirler/${ideaId}/oylar`));
+      let totalVotes = 0;
+      votesSnapshot.forEach(voteDoc => totalVotes += voteDoc.data().deger);
+      await updateDoc(ideaRef, { oySayisi: totalVotes });
+      loadIdea();
+    }
+
+    commentSubmit.addEventListener('click', async () => {
+      if (!auth.currentUser) return alert('Yorum yapmak için giriş yapmalısınız!');
+      const comment = commentInput.value.trim();
+      if (!comment) return alert('Yorum boş olamaz!');
+      await addDoc(collection(db, `fikirler/${ideaId}/yorumlar`), {
+        yorum: comment,
+        kullaniciId: auth.currentUser.uid,
+        kullaniciAdi: (await getDoc(doc(db, 'kullanicilar', auth.currentUser.uid))).data().kullaniciAdi,
+        tarih: new Date()
+      });
+      await updateDoc(doc(db, 'fikirler', ideaId), { yorumSayisi: increment(1) });
+      commentInput.value = '';
+      loadComments();
+    });
+  </script>
+</body>
+</html>
