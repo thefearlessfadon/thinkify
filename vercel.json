@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/giris", "destination": "/login.html" },
+    { "source": "/paylas", "destination": "/share.html" },
+    { "source": "/fikir/:id", "destination": "/idea.html" },
+    { "source": "/profil", "destination": "/profile.html" },
+    { "source": "/profil/:kullaniciAdi", "destination": "/user.html" },
+    { "source": "/pro", "destination": "/pro.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
