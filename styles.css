@@ -43,10 +43,6 @@ nav a:hover {
   background: rgba(255, 255, 255, 0.2);
   color: #d1d5db;
 }
-nav a i, label i, button i, h2 i, h3 i {
-  font-size: 1.2em;
-  min-width: 20px;
-}
 main {
   max-width: 900px;
   margin: 20px auto;
