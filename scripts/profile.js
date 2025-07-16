@@ -33,11 +33,14 @@ async function loadProfile(userId) {
         const div = document.createElement('div');
         div.className = 'idea';
         div.innerHTML = `
-          <h3><a href="/fikir/${doc.id}">${idea.baslik}</a></h3>
+          <h3 data-id="${doc.id}">${idea.baslik}</h3>
           <p>${idea.aciklama}</p>
           <p>Kategori: ${idea.kategori}</p>
           <p><i class="fas fa-thumbs-up"></i> Oy: ${idea.oySayisi} | <i class="fas fa-comment"></i> Yorum: ${idea.yorumSayisi}</p>
         `;
+        div.querySelector(`h3[data-id="${doc.id}"]`).addEventListener('click', () => {
+          window.location.href = `/fikir/${doc.id}`;
+        });
         userIdeasDiv.appendChild(div);
       });
     }

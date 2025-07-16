@@ -30,6 +30,20 @@ function updateAuthLink(user) {
   }
 }
 
+function toggleTheme() {
+  const body = document.body;
+  const themeToggle = document.getElementById('theme-toggle');
+  if (body.classList.contains('dark-theme')) {
+    body.classList.remove('dark-theme');
+    themeToggle.innerHTML = '<i class="fas fa-moon"></i> Siyah Tema';
+    localStorage.setItem('theme', 'light');
+  } else {
+    body.classList.add('dark-theme');
+    themeToggle.innerHTML = '<i class="fas fa-sun"></i> Beyaz Tema';
+    localStorage.setItem('theme', 'dark');
+  }
+}
+
 export async function login(email, password) {
   try {
     await signInWithEmailAndPassword(auth, email, password);
@@ -92,8 +106,19 @@ auth.onAuthStateChanged(user => {
   updateAuthLink(user);
 });
 
-// Sayfa yüklendiğinde auth-link'i kontrol et
+// Sayfa yüklendiğinde tema ve auth-link'i kontrol et
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('DOM yüklendi, auth-link kontrol ediliyor');
+  console.log('DOM yüklendi, auth-link ve tema kontrol ediliyor');
   updateAuthLink(auth.currentUser);
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-theme');
+      themeToggle.innerHTML = '<i class="fas fa-sun"></i> Beyaz Tema';
+    } else {
+      themeToggle.innerHTML = '<i class="fas fa-moon"></i> Siyah Tema';
+    }
+    themeToggle.addEventListener('click', toggleTheme);
+  }
 });

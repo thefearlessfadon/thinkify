@@ -1,18 +1,38 @@
+:root {
+  --primary: #2563EB;
+  --background: #FFFFFF;
+  --text: #1F2937;
+  --card-bg: #F3F4F6;
+  --accent: #FBBF24;
+}
+
+.dark-theme {
+  --primary: #2563EB;
+  --background: #1F2937;
+  --text: #F3F4F6;
+  --card-bg: #374151;
+  --accent: #FBBF24;
+}
+
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
-  background: linear-gradient(135deg, #e0e7ff, #f3e8ff);
+  background: var(--background);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
 }
+
 header {
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-  color: white;
+  background: var(--primary);
+  color: #FFFFFF;
   padding: 10px 20px;
   position: sticky;
   top: 0;
   z-index: 100;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
 h1 {
   margin: 0;
   font-size: 1.8em;
@@ -21,6 +41,7 @@ h1 {
   gap: 10px;
   justify-content: center;
 }
+
 nav {
   display: flex;
   justify-content: center;
@@ -28,8 +49,9 @@ nav {
   margin-top: 10px;
   flex-wrap: wrap;
 }
-nav a {
-  color: white;
+
+nav a, nav button {
+  color: #FFFFFF;
   text-decoration: none;
   font-weight: bold;
   display: flex;
@@ -38,41 +60,54 @@ nav a {
   padding: 8px 12px;
   border-radius: 5px;
   transition: background 0.3s, color 0.3s;
+  border: none;
+  background: none;
+  cursor: pointer;
 }
-nav a:hover {
+
+nav a:hover, nav button:hover {
   background: rgba(255, 255, 255, 0.2);
   color: #d1d5db;
 }
+
 main {
   max-width: 900px;
   margin: 20px auto;
   padding: 20px;
-  background: white;
+  background: var(--card-bg);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-h2 {
-  color: #3b82f6;
+
+h2, h3 {
+  color: var(--text);
   display: flex;
   align-items: center;
   gap: 10px;
+  font-weight: bold;
 }
+
 form {
   display: grid;
   gap: 15px;
 }
+
 input, textarea, select, button {
   padding: 12px;
   font-size: 16px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--text);
   border-radius: 5px;
+  background: var(--background);
+  color: var(--text);
 }
+
 textarea {
   resize: vertical;
 }
+
 button {
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-  color: white;
+  background: var(--primary);
+  color: #FFFFFF;
   border: none;
   cursor: pointer;
   display: flex;
@@ -83,69 +118,104 @@ button {
   border-radius: 5px;
   transition: background 0.3s, transform 0.2s;
 }
+
+button.accent {
+  background: var(--accent);
+  color: var(--text);
+}
+
 button:hover {
-  background: linear-gradient(90deg, #2563eb, #7c3aed);
+  background: #1E40AF;
   transform: scale(1.05);
 }
+
+button.accent:hover {
+  background: #F59E0B;
+}
+
 button:active {
-  background: linear-gradient(90deg, #16a34a, #22c55e);
+  background: #16A34A;
   transform: scale(0.95);
 }
+
 .spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3b82f6;
+  border: 4px solid var(--card-bg);
+  border-top: 4px solid var(--primary);
   border-radius: 50%;
   width: 30px;
   height: 30px;
   animation: spin 1s linear infinite;
   margin: 10px auto;
 }
+
 .spinner.hidden {
   display: none;
 }
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
 #ideas, #comments, #user-ideas {
   display: grid;
   gap: 15px;
 }
+
 .idea, .comment {
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--text);
   padding: 15px;
   border-radius: 8px;
-  background: #f9fafb;
+  background: var(--card-bg);
   transition: transform 0.2s;
 }
+
 .idea:hover, .comment:hover {
   transform: translateY(-2px);
 }
+
+.idea h3 {
+  color: var(--text);
+  font-weight: bold;
+  margin: 0 0 10px 0;
+  cursor: pointer;
+}
+
+.idea p {
+  color: var(--text);
+  margin: 5px 0;
+}
+
 .profile-container {
   display: grid;
   grid-template-columns: 150px 1fr;
   gap: 20px;
   align-items: start;
 }
+
 .profile-image {
   text-align: center;
 }
+
 .profile-image img {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #3b82f6;
+  border: 2px solid var(--primary);
 }
+
 .profile-image input {
   margin: 10px 0;
 }
+
 label {
   font-weight: bold;
   display: flex;
   align-items: center;
   gap: 8px;
 }
+
 @media (max-width: 600px) {
   header {
     padding: 10px;
@@ -158,7 +228,7 @@ label {
     gap: 10px;
     align-items: center;
   }
-  nav a {
+  nav a, nav button {
     padding: 8px;
     width: 100%;
     text-align: center;

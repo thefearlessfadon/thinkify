@@ -18,6 +18,53 @@ const commentsDiv = document.getElementById('comments');
 const commentForm = document.getElementById('comment-form');
 const commentInput = document.getElementById('comment-input');
 
+async function vote(ideaId, value) {
+  if (!auth.currentUser) {
+    alert('Oy vermek için giriş yapmalısınız!');
+    window.location.href = '/giris';
+    return;
+  }
+  try {
+    const voteRef = doc(db, `fikirler/${ideaId}/oylar`, auth.currentUser.uid);
+    const ideaRef = doc(db, 'fikirler', ideaId);
+    await setDoc(voteRef, { kullaniciId: auth.currentUser.uid, deger: value });
+    const votesSnapshot = await getDocs(collection(db, `fikirler/${ideaId}/oylar`));
+    let totalVotes = 0;
+    votesSnapshot.forEach(voteDoc => totalVotes += voteDoc.data().deger);
+    await updateDoc(ideaRef, { oySayisi: totalVotes });
+    return totalVotes;
+  } catch (error) {
+    console.error('Oy verme hatası:', error);
+    alert('Oy verme başarısız: ' + error.message);
+  }
+}
+
+async function addComment(ideaId, comment) {
+  if (!auth.currentUser) {
+    alert('Yorum yapmak için giriş yapmalısınız!');
+    window.location.href = '/giris';
+    return;
+  }
+  if (!comment) {
+    alert('Yorum boş olamaz!');
+    return;
+  }
+  try {
+    const userDoc = await getDoc(doc(db, 'kullanicilar', auth.currentUser.uid));
+    await addDoc(collection(db, `fikirler/${ideaId}/yorumlar`), {
+      yorum: comment,
+      kullaniciId: auth.currentUser.uid,
+      kullaniciAdi: userDoc.data().kullaniciAdi,
+      tarih: new Date()
+    });
+    await updateDoc(doc(db, 'fikirler', ideaId), { yorumSayisi: increment(1) });
+    return true;
+  } catch (error) {
+    console.error('Yorum ekleme hatası:', error);
+    alert('Yorum ekleme başarısız: ' + error.message);
+  }
+}
+
 if (ideasDiv) {
   async function loadIdeas() {
     ideasDiv.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Fikirler yükleniyor...</p>';
@@ -36,12 +83,32 @@ if (ideasDiv) {
         const div = document.createElement('div');
         div.className = 'idea';
         div.innerHTML = `
-          <h3><a href="/fikir/${doc.id}">${idea.baslik}</a></h3>
+          <h3 data-id="${doc.id}">${idea.baslik}</h3>
           <p>${idea.aciklama}</p>
           <p>Kategori: ${idea.kategori}</p>
-          <p><i class="fas fa-thumbs-up"></i> Oy: ${idea.oySayisi} | <i class="fas fa-comment"></i> Yorum: ${idea.yorumSayisi}</p>
+          <p><i class="fas fa-thumbs-up"></i> Oy: <span class="vote-count-${doc.id}">${idea.oySayisi}</span> | <i class="fas fa-comment"></i> Yorum: ${idea.yorumSayisi}</p>
+          <div class="vote-buttons">
+            <button class="accent" onclick="vote('${doc.id}', 1)"><i class="fas fa-thumbs-up"></i> +1</button>
+            <button class="accent" onclick="vote('${doc.id}', -1)"><i class="fas fa-thumbs-down"></i> -1</button>
+          </div>
+          <form class="comment-form-${doc.id}">
+            <textarea placeholder="Yorumunuzu yazın" required></textarea>
+            <button type="submit" class="accent"><i class="fas fa-comment"></i> Yorum Yap</button>
+          </form>
         `;
         ideasDiv.appendChild(div);
+        div.querySelector(`.comment-form-${doc.id}`).addEventListener('submit', async e => {
+          e.preventDefault();
+          const comment = div.querySelector(`.comment-form-${doc.id} textarea`).value.trim();
+          if (await addComment(doc.id, comment)) {
+            div.querySelector(`.comment-form-${doc.id} textarea`).value = '';
+            alert('Yorum başarıyla eklendi!');
+            loadIdeas();
+          }
+        });
+        div.querySelector(`h3[data-id="${doc.id}"]`).addEventListener('click', () => {
+          window.location.href = `/fikir/${doc.id}`;
+        });
       });
     } catch (error) {
       console.error('Fikir yükleme hatası:', error);
@@ -152,59 +219,34 @@ if (ideaTitle) {
   if (commentForm) {
     commentForm.addEventListener('submit', async e => {
       e.preventDefault();
-      if (!auth.currentUser) {
-        alert('Yorum yapmak için giriş yapmalısınız!');
-        window.location.href = '/giris';
-        return;
-      }
-      const comment = commentInput.value.trim();
-      if (!comment) {
-        alert('Yorum boş olamaz!');
-        return;
-      }
-      try {
-        const userDoc = await getDoc(doc(db, 'kullanicilar', auth.currentUser.uid));
-        await addDoc(collection(db, `fikirler/${ideaId}/yorumlar`), {
-          yorum: comment,
-          kullaniciId: auth.currentUser.uid,
-          kullaniciAdi: userDoc.data().kullaniciAdi,
-          tarih: new Date()
-        });
-        await updateDoc(doc(db, 'fikirler', ideaId), { yorumSayisi: increment(1) });
+      const success = await addComment(ideaId, commentInput.value.trim());
+      if (success) {
         commentInput.value = '';
         alert('Yorum başarıyla eklendi!');
         loadComments();
-      } catch (error) {
-        console.error('Yorum ekleme hatası:', error);
-        alert('Yorum ekleme başarısız: ' + error.message);
+        loadIdea();
       }
     });
   }
   if (upvoteBtn && downvoteBtn) {
-    upvoteBtn.addEventListener('click', () => vote(1));
-    downvoteBtn.addEventListener('click', () => vote(-1));
-    async function vote(value) {
-      if (!auth.currentUser) {
-        alert('Oy vermek için giriş yapmalısınız!');
-        window.location.href = '/giris';
-        return;
-      }
-      try {
-        const voteRef = doc(db, `fikirler/${ideaId}/oylar`, auth.currentUser.uid);
-        const ideaRef = doc(db, 'fikirler', ideaId);
-        await setDoc(voteRef, { kullaniciId: auth.currentUser.uid, deger: value });
-        const votesSnapshot = await getDocs(collection(db, `fikirler/${ideaId}/oylar`));
-        let totalVotes = 0;
-        votesSnapshot.forEach(voteDoc => totalVotes += voteDoc.data().deger);
-        await updateDoc(ideaRef, { oySayisi: totalVotes });
-        loadIdea();
+    upvoteBtn.addEventListener('click', async () => {
+      const newVotes = await vote(ideaId, 1);
+      if (newVotes !== undefined) {
+        ideaVotes.textContent = newVotes;
         alert('Oyunuz kaydedildi!');
-      } catch (error) {
-        console.error('Oy verme hatası:', error);
-        alert('Oy verme başarısız: ' + error.message);
       }
-    }
+    });
+    downvoteBtn.addEventListener('click', async () => {
+      const newVotes = await vote(ideaId, -1);
+      if (newVotes !== undefined) {
+        ideaVotes.textContent = newVotes;
+        alert('Oyunuz kaydedildi!');
+      }
+    });
   }
   loadIdea();
   loadComments();
 }
+
+// Global vote fonksiyonu
+window.vote = vote;
