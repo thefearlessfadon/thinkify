@@ -3,68 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thinkify - Giriş/Kayıt</title>
+  <title>Thinkify - Giriş Yap</title>
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+  <div id="loading-spinner" class="spinner"></div>
   <header>
-    <h1>Thinkify</h1>
+    <h1><i class="fas fa-lightbulb"></i> Thinkify</h1>
     <nav>
-      <a href="/">Anasayfa</a>
-      <a href="/paylas">Fikir Paylaş</a>
-      <a href="/profil">Profil</a>
-      <a href="/pro">Pro</a>
+      <a href="/"><i class="fas fa-home"></i> Anasayfa</a>
+      <a href="/paylas"><i class="fas fa-share"></i> Fikir Paylaş</a>
+      <a href="/profil"><i class="fas fa-user"></i> Profil</a>
+      <a href="/pro"><i class="fas fa-star"></i> Pro</a>
+      <a href="/giris" id="auth-link"><i class="fas fa-sign-in-alt"></i> Giriş</a>
     </nav>
   </header>
-  <main>
-    <h2>Giriş Yap</h2>
+  <main class="hidden">
+    <h2><i class="fas fa-sign-in-alt"></i> Giriş Yap</h2>
     <form id="login-form">
-      <input type="email" id="login-email" placeholder="E-posta" required>
-      <input type="password" id="login-password" placeholder="Şifre" required>
-      <button type="submit">Giriş</button>
+      <label><i class="fas fa-envelope"></i> E-posta:</label>
+      <input type="email" id="email" placeholder="E-posta adresinizi girin">
+      <label><i class="fas fa-lock"></i> Şifre:</label>
+      <input type="password" id="password" placeholder="Şifrenizi girin">
+      <button type="submit"><i class="fas fa-sign-in-alt"></i> Giriş Yap</button>
+      <button type="button" id="google-login"><i class="fab fa-google"></i> Google ile Giriş</button>
     </form>
-    <h2>Kayıt Ol</h2>
-    <form id="register-form">
-      <input type="text" id="username" placeholder="Kullanıcı Adı" required>
-      <input type="email" id="register-email" placeholder="E-posta" required>
-      <input type="password" id="register-password" placeholder="Şifre" required>
-      <button type="submit">Kayıt Ol</button>
-    </form>
-    <button id="google-signin">Google ile Giriş</button>
+    <p>Hesabınız yok mu? <a href="/kayit"><i class="fas fa-user-plus"></i> Kayıt Ol</a></p>
   </main>
-  <script type="module">
-    import { login, register, googleSignIn } from '/scripts/auth.js';
-    document.getElementById('login-form').addEventListener('submit', async e => {
-      e.preventDefault();
-      const email = document.getElementById('login-email').value;
-      const password = document.getElementById('login-password').value;
-      try {
-        await login(email, password);
-        alert('Giriş başarılı!');
-      } catch (error) {
-        alert('Giriş başarısız: ' + error.message);
-      }
-    });
-    document.getElementById('register-form').addEventListener('submit', async e => {
-      e.preventDefault();
-      const username = document.getElementById('username').value;
-      const email = document.getElementById('register-email').value;
-      const password = document.getElementById('register-password').value;
-      try {
-        await register(email, password, username);
-        alert('Kayıt başarılı!');
-      } catch (error) {
-        alert('Kayıt başarısız: ' + error.message);
-      }
-    });
-    document.getElementById('google-signin').addEventListener('click', async () => {
-      try {
-        await googleSignIn();
-        alert('Google ile giriş başarılı!');
-      } catch (error) {
-        alert('Google ile giriş başarısız: ' + error.message);
-      }
-    });
-  </script>
+  <script type="module" src="/scripts/auth.js"></script>
 </body>
 </html>

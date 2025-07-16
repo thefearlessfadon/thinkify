@@ -3,24 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thinkify - Kullanıcı</title>
+  <title>Thinkify - Kullanıcı Profili</title>
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+  <div id="loading-spinner" class="spinner"></div>
   <header>
-    <h1>Thinkify</h1>
+    <h1><i class="fas fa-lightbulb"></i> Thinkify</h1>
     <nav>
-      <a href="/">Anasayfa</a>
-      <a href="/paylas">Fikir Paylaş</a>
-      <a href="/profil">Profil</a>
-      <a href="/pro">Pro</a>
-      <a href="/giris" id="auth-link">Giriş</a>
+      <a href="/"><i class="fas fa-home"></i> Anasayfa</a>
+      <a href="/paylas"><i class="fas fa-share"></i> Fikir Paylaş</a>
+      <a href="/profil"><i class="fas fa-user"></i> Profil</a>
+      <a href="/pro"><i class="fas fa-star"></i> Pro</a>
+      <a href="/giris" id="auth-link"><i class="fas fa-sign-in-alt"></i> Giriş</a>
     </nav>
   </header>
-  <main>
-    <h2 id="username"></h2>
-    <p>Bio: <span id="bio"></span></p>
-    <h3>Fikirler</h3>
+  <main class="hidden">
+    <h2><i class="fas fa-user"></i> Kullanıcı Profili</h2>
+    <div class="profile-container">
+      <div class="profile-image">
+        <img id="profile-image" src="" alt="Profil Resmi" onerror="this.src='https://via.placeholder.com/100'">
+      </div>
+      <div>
+        <p><strong><i class="fas fa-id-badge"></i> Kullanıcı Adı:</strong> <span id="username"></span></p>
+        <p><strong><i class="fas fa-user-edit"></i> Görünen Ad:</strong> <span id="display-name"></span></p>
+        <p><strong><i class="fas fa-comment"></i> Bio:</strong> <span id="bio"></span></p>
+      </div>
+    </div>
+    <h3><i class="fas fa-lightbulb"></i> Kullanıcının Fikirleri</h3>
     <div id="user-ideas"></div>
   </main>
   <script type="module" src="/scripts/profile.js"></script>
