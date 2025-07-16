@@ -1,76 +1,102 @@
-/* styles.css */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
+  background: linear-gradient(135deg, #e0e7ff, #f3e8ff);
 }
-
 header {
-  background-color: #333;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
   color: white;
-  padding: 10px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
-
-header h1 {
+h1 {
   margin: 0;
+  font-size: 2em;
 }
-
 nav a {
   color: white;
-  margin-left: 20px;
+  margin: 0 15px;
   text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
 }
-
+nav a:hover {
+  color: #d1d5db;
+}
 main {
-  max-width: 800px;
+  max-width: 900px;
   margin: 20px auto;
   padding: 20px;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
-.idea-card {
-  border-bottom: 1px solid #ddd;
-  padding: 10px 0;
+h2 {
+  color: #3b82f6;
 }
-
-.idea-card h3 {
-  margin: 0;
-}
-
-.comment {
-  border-bottom: 1px solid #ddd;
-  padding: 10px 0;
-}
-
 form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
 }
-
 input, textarea, select, button {
-  padding: 10px;
+  padding: 12px;
   font-size: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
 }
-
 button {
-  background-color: #333;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
   color: white;
   border: none;
   cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
 }
-
-button:disabled {
-  background-color: #999;
-  cursor: not-allowed;
+button:hover {
+  background: linear-gradient(90deg, #2563eb, #7c3aed);
+  transform: scale(1.05);
 }
-
-button:hover:not(:disabled) {
-  background-color: #555;
+button:active {
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+  transform: scale(0.95);
+}
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin: 10px auto;
+}
+.spinner.hidden {
+  display: none;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#ideas, #comments, #user-ideas {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.idea, .comment {
+  border: 1px solid #d1d5db;
+  padding: 15px;
+  border-radius: 8px;
+  background: #f9fafb;
+}
+@media (max-width: 600px) {
+  main {
+    padding: 10px;
+  }
+  h1 {
+    font-size: 1.5em;
+  }
+  nav a {
+    margin: 0 10px;
+  }
 }
