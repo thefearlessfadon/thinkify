@@ -46,10 +46,6 @@ export function logout() {
 
 auth.onAuthStateChanged(user => {
   const authLink = document.getElementById('auth-link');
-  const spinner = document.getElementById('loading-spinner');
-  const main = document.querySelector('main');
-  if (!authLink || !spinner || !main) return;
-
   if (user) {
     authLink.innerHTML = '<i class="fas fa-sign-out-alt"></i> Çıkış';
     authLink.onclick = logout;
@@ -57,6 +53,4 @@ auth.onAuthStateChanged(user => {
     authLink.innerHTML = '<i class="fas fa-sign-in-alt"></i> Giriş';
     authLink.href = '/giris';
   }
-  spinner.classList.add('hidden');
-  main.classList.remove('hidden');
 });
