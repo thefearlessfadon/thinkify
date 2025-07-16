@@ -1,16 +1,18 @@
 import { auth, db } from './firebase.js';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const provider = new GoogleAuthProvider();
 
 export async function login(email, password) {
+  await setPersistence(auth, browserSessionPersistence);
   return signInWithEmailAndPassword(auth, email, password)
     .then(() => window.location.href = '/')
     .catch(error => { throw error; });
 }
 
 export async function register(email, password, username, displayName) {
+  await setPersistence(auth, browserSessionPersistence);
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
   const user = userCredential.user;
   await setDoc(doc(db, 'kullanicilar', user.uid), {
@@ -26,6 +28,7 @@ export async function register(email, password, username, displayName) {
 }
 
 export async function googleSignIn() {
+  await setPersistence(auth, browserSessionPersistence);
   const result = await signInWithPopup(auth, provider);
   const user = result.user;
   await setDoc(doc(db, 'kullanicilar', user.uid), {

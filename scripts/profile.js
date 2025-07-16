@@ -94,7 +94,7 @@ if (uploadImageButton && profileImageInput) {
       }, { merge: true });
       profileImage.src = downloadURL;
       alert('Profil resmi yüklendi!');
-    } catch (error) {
+    } else {
       console.error('Resim yükleme hatası:', error);
       alert('Resim yükleme başarısız: ' + error.message);
     }

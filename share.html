@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thinkify - Fikir Paylaş</title>
   <link rel="stylesheet" href="/styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-  <div id="loading-spinner" class="spinner"></div>
   <header>
     <h1><i class="fas fa-lightbulb"></i> Thinkify</h1>
     <nav>
@@ -19,16 +18,13 @@
       <a href="/giris" id="auth-link"><i class="fas fa-sign-in-alt"></i> Giriş</a>
     </nav>
   </header>
-  <main class="hidden">
-    <h2><i class="fas fa-share-square"></i> Fikir Paylaş</h2>
+  <main>
+    <h2><i class="fas fa-share-alt"></i> Fikir Paylaş</h2>
     <form id="share-form">
-      <label><i class="fas fa-heading"></i> Başlık:</label>
-      <input type="text" id="title" placeholder="Fikrinizin başlığını girin">
-      <label><i class="fas fa-align-left"></i> Açıklama:</label>
-      <textarea id="description" placeholder="Fikrinizi detaylı açıklayın"></textarea>
-      <label><i class="fas fa-list"></i> Kategori:</label>
-      <select id="category">
-        <option value="">Kategori seçin</option>
+      <input type="text" id="title" placeholder="Başlık" required>
+      <textarea id="description" placeholder="Açıklama" required></textarea>
+      <select id="category" required>
+        <option value="" disabled selected>Kategori seçin</option>
         <option value="Teknoloji">Teknoloji</option>
         <option value="Eğitim">Eğitim</option>
         <option value="Sağlık">Sağlık</option>
@@ -45,10 +41,10 @@
         <option value="Oyun">Oyun</option>
         <option value="Sosyal İnovasyon">Sosyal İnovasyon</option>
       </select>
-      <button type="submit" id="share-button"><i class="fas fa-check"></i> Paylaş</button>
+      <button type="submit" id="share-button"><i class="fas fa-paper-plane"></i> Paylaş</button>
       <button type="button" id="cancel-button"><i class="fas fa-times"></i> İptal</button>
-      <div id="loading-spinner" class="spinner hidden"></div>
     </form>
+    <div id="loading-spinner" class="spinner hidden"></div>
   </main>
   <script type="module" src="/scripts/ideas.js"></script>
 </body>
