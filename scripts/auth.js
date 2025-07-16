@@ -10,13 +10,15 @@ export async function login(email, password) {
     .catch(error => { throw error; });
 }
 
-export async function register(email, password, username) {
+export async function register(email, password, username, displayName) {
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
   const user = userCredential.user;
   await setDoc(doc(db, 'kullanicilar', user.uid), {
     uid: user.uid,
     kullaniciAdi: username,
+    gorunenAd: displayName || username,
     bio: '',
+    profilResmi: '',
     proUye: false,
     kayitTarihi: new Date()
   });
@@ -29,7 +31,9 @@ export async function googleSignIn() {
   await setDoc(doc(db, 'kullanicilar', user.uid), {
     uid: user.uid,
     kullaniciAdi: user.displayName || 'User' + user.uid.slice(0, 5),
+    gorunenAd: user.displayName || 'User' + user.uid.slice(0, 5),
     bio: '',
+    profilResmi: user.photoURL || '',
     proUye: false,
     kayitTarihi: new Date()
   }, { merge: true });
@@ -43,10 +47,10 @@ export function logout() {
 auth.onAuthStateChanged(user => {
   const authLink = document.getElementById('auth-link');
   if (user) {
-    authLink.textContent = 'Çıkış';
+    authLink.innerHTML = '<i class="fas fa-sign-out-alt"></i> Çıkış';
     authLink.onclick = logout;
   } else {
-    authLink.textContent = 'Giriş';
+    authLink.innerHTML = '<i class="fas fa-sign-in-alt"></i> Giriş';
     authLink.href = '/giris';
   }
 });

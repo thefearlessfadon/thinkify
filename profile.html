@@ -5,26 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thinkify - Profil</title>
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
   <header>
-    <h1>Thinkify</h1>
+    <h1><i class="fas fa-lightbulb"></i> Thinkify</h1>
     <nav>
-      <a href="/">Anasayfa</a>
-      <a href="/paylas">Fikir Paylaş</a>
-      <a href="/pro">Pro</a>
-      <a href="/giris" id="auth-link">Giriş</a>
+      <a href="/"><i class="fas fa-home"></i> Anasayfa</a>
+      <a href="/paylas"><i class="fas fa-share"></i> Fikir Paylaş</a>
+      <a href="/profil"><i class="fas fa-user"></i> Profil</a>
+      <a href="/pro"><i class="fas fa-star"></i> Pro</a>
+      <a href="/giris" id="auth-link"><i class="fas fa-sign-in-alt"></i> Giriş</a>
     </nav>
   </header>
   <main>
-    <h2>Profil</h2>
-    <p>Kullanıcı Adı: <span id="username"></span></p>
-    <p>Bio: <span id="bio"></span></p>
-    <form id="bio-form">
-      <textarea id="bio-input" placeholder="Bio yazın"></textarea>
-      <button type="submit">Güncelle</button>
-    </form>
-    <h3>Fikirleriniz</h3>
+    <h2><i class="fas fa-cog"></i> Profil Ayarları</h2>
+    <div class="profile-container">
+      <div class="profile-image">
+        <img id="profile-image" src="" alt="Profil Resmi" onerror="this.src='https://via.placeholder.com/100'">
+        <input type="file" id="profile-image-input" accept="image/*">
+        <button id="upload-image-button"><i class="fas fa-upload"></i> Resim Yükle</button>
+      </div>
+      <form id="profile-form">
+        <label><i class="fas fa-id-badge"></i> Kullanıcı Adı:</label>
+        <input type="text" id="username" disabled>
+        <label><i class="fas fa-user-edit"></i> Görünen Ad:</label>
+        <input type="text" id="display-name" placeholder="Görünen adınızı girin">
+        <label><i class="fas fa-comment"></i> Bio:</label>
+        <textarea id="bio-input" placeholder="Bio yazın"></textarea>
+        <button type="submit"><i class="fas fa-save"></i> Güncelle</button>
+      </form>
+    </div>
+    <h3><i class="fas fa-lightbulb"></i> Fikirleriniz</h3>
     <div id="user-ideas"></div>
   </main>
   <script type="module" src="/scripts/profile.js"></script>
