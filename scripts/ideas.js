@@ -19,6 +19,7 @@ const commentForm = document.getElementById('comment-form');
 const commentInput = document.getElementById('comment-input');
 
 async function vote(ideaId, value) {
+  console.log('Oy verme başlıyor, ideaId:', ideaId, 'value:', value, 'user:', auth.currentUser ? auth.currentUser.uid : 'null');
   if (!auth.currentUser) {
     alert('Oy vermek için giriş yapmalısınız!');
     window.location.href = '/giris';
@@ -27,10 +28,13 @@ async function vote(ideaId, value) {
   try {
     const voteRef = doc(db, `fikirler/${ideaId}/oylar`, auth.currentUser.uid);
     const ideaRef = doc(db, 'fikirler', ideaId);
+    console.log('Oy kaydediliyor, voteRef:', voteRef.path);
     await setDoc(voteRef, { kullaniciId: auth.currentUser.uid, deger: value });
+    console.log('Oy kaydedildi, toplam oyları güncelliyor');
     const votesSnapshot = await getDocs(collection(db, `fikirler/${ideaId}/oylar`));
     let totalVotes = 0;
     votesSnapshot.forEach(voteDoc => totalVotes += voteDoc.data().deger);
+    console.log('Toplam oylar:', totalVotes);
     await updateDoc(ideaRef, { oySayisi: totalVotes });
     return totalVotes;
   } catch (error) {
@@ -40,6 +44,7 @@ async function vote(ideaId, value) {
 }
 
 async function addComment(ideaId, comment) {
+  console.log('Yorum ekleniyor, ideaId:', ideaId, 'comment:', comment);
   if (!auth.currentUser) {
     alert('Yorum yapmak için giriş yapmalısınız!');
     window.location.href = '/giris';
@@ -51,12 +56,14 @@ async function addComment(ideaId, comment) {
   }
   try {
     const userDoc = await getDoc(doc(db, 'kullanicilar', auth.currentUser.uid));
+    console.log('Kullanıcı verisi alındı:', userDoc.exists() ? userDoc.data() : 'Bulunamadı');
     await addDoc(collection(db, `fikirler/${ideaId}/yorumlar`), {
       yorum: comment,
       kullaniciId: auth.currentUser.uid,
       kullaniciAdi: userDoc.data().kullaniciAdi,
       tarih: new Date()
     });
+    console.log('Yorum eklendi, yorum sayısı güncelleniyor');
     await updateDoc(doc(db, 'fikirler', ideaId), { yorumSayisi: increment(1) });
     return true;
   } catch (error) {
