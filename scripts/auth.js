@@ -8,6 +8,49 @@ const provider = new GoogleAuthProvider();
 setPersistence(auth, browserLocalPersistence)
   .catch(error => console.error('Oturum kalıcılığı ayarlanamadı:', error));
 
+// Oturum durumunu kontrol et
+function updateAuthUI(user) {
+  const authLink = document.getElementById('auth-link');
+  const spinner = document.getElementById('loading-spinner');
+  const main = document.querySelector('main');
+  if (!authLink || !spinner || !main) {
+    console.error('auth-link, spinner veya main bulunamadı');
+    return;
+  }
+
+  if (user) {
+    authLink.innerHTML = '<i class="fas fa-sign-out-alt"></i> Çıkış';
+    authLink.href = '#'; // Çıkış için href kaldırmak
+    authLink.onclick = (e) => {
+      e.preventDefault();
+      logout();
+    };
+  } else {
+    authLink.innerHTML = '<i class="fas fa-sign-in-alt"></i> Giriş';
+    authLink.href = '/giris';
+    authLink.onclick = null;
+  }
+  spinner.classList.add('hidden');
+  main.classList.remove('hidden');
+}
+
+auth.onAuthStateChanged(user => {
+  updateAuthUI(user);
+});
+
+// Tüm bağlantılar için yönlendirme
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('a:not(#auth-link)').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = link.getAttribute('href');
+      if (href) {
+        window.location.href = href;
+      }
+    });
+  });
+});
+
 export async function login(email, password) {
   try {
     await signInWithEmailAndPassword(auth, email, password);
@@ -65,35 +108,3 @@ export function logout() {
     console.error('Çıkış hatası:', error);
   });
 }
-
-auth.onAuthStateChanged(user => {
-  const authLink = document.getElementById('auth-link');
-  const spinner = document.getElementById('loading-spinner');
-  const main = document.querySelector('main');
-  if (!authLink || !spinner || !main) {
-    console.error('auth-link, spinner veya main bulunamadı');
-    return;
-  }
-
-  if (user) {
-    authLink.innerHTML = '<i class="fas fa-sign-out-alt"></i> Çıkış';
-    authLink.onclick = (e) => {
-      e.preventDefault();
-      logout();
-    };
-  } else {
-    authLink.innerHTML = '<i class="fas fa-sign-in-alt"></i> Giriş';
-    authLink.href = '/giris';
-    authLink.onclick = null; // Çıkış fonksiyonunu kaldır
-  }
-  spinner.classList.add('hidden');
-  main.classList.remove('hidden');
-});
-
-// Tüm bağlantılara tıklama olayını engelleme
-document.querySelectorAll('a:not(#auth-link)').forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.location.href = link.getAttribute('href');
-  });
-});
