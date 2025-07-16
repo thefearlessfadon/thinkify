@@ -1,11 +1,10 @@
-<!-- login.html -->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thinkify - Giriş/Kayıt</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <header>
@@ -34,24 +33,38 @@
     <button id="google-signin">Google ile Giriş</button>
   </main>
   <script type="module">
-    import { login, register, googleSignIn } from './scripts/auth.js';
-
-    document.getElementById('login-form').addEventListener('submit', e => {
+    import { login, register, googleSignIn } from '/scripts/auth.js';
+    document.getElementById('login-form').addEventListener('submit', async e => {
       e.preventDefault();
       const email = document.getElementById('login-email').value;
       const password = document.getElementById('login-password').value;
-      login(email, password);
+      try {
+        await login(email, password);
+        alert('Giriş başarılı!');
+      } catch (error) {
+        alert('Giriş başarısız: ' + error.message);
+      }
     });
-
-    document.getElementById('register-form').addEventListener('submit', e => {
+    document.getElementById('register-form').addEventListener('submit', async e => {
       e.preventDefault();
       const username = document.getElementById('username').value;
       const email = document.getElementById('register-email').value;
       const password = document.getElementById('register-password').value;
-      register(email, password, username);
+      try {
+        await register(email, password, username);
+        alert('Kayıt başarılı!');
+      } catch (error) {
+        alert('Kayıt başarısız: ' + error.message);
+      }
     });
-
-    document.getElementById('google-signin').addEventListener('click', googleSignIn);
+    document.getElementById('google-signin').addEventListener('click', async () => {
+      try {
+        await googleSignIn();
+        alert('Google ile giriş başarılı!');
+      } catch (error) {
+        alert('Google ile giriş başarısız: ' + error.message);
+      }
+    });
   </script>
 </body>
 </html>

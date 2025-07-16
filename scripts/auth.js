@@ -1,47 +1,52 @@
-// scripts/auth.js
-import { auth } from './firebase.js';
+import { auth, db } from './firebase.js';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { db } from './firebase.js';
 
 const provider = new GoogleAuthProvider();
 
-export function login(email, password) {
+export async function login(email, password) {
   return signInWithEmailAndPassword(auth, email, password)
     .then(() => window.location.href = '/')
-    .catch(error => alert('Login failed: ' + error.message));
+    .catch(error => { throw error; });
 }
 
-export function register(email, password, username) {
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(userCredential => {
-      const user = userCredential.user;
-      return setDoc(doc(db, 'kullanicilar', user.uid), {
-        uid: user.uid,
-        kullaniciAdi: username,
-        bio: '',
-        proUye: false,
-        kayitTarihi: new Date()
-      }).then(() => window.location.href = '/');
-    })
-    .catch(error => alert('Registration failed: ' + error.message));
+export async function register(email, password, username) {
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const user = userCredential.user;
+  await setDoc(doc(db, 'kullanicilar', user.uid), {
+    uid: user.uid,
+    kullaniciAdi: username,
+    bio: '',
+    proUye: false,
+    kayitTarihi: new Date()
+  });
+  window.location.href = '/';
 }
 
-export function googleSignIn() {
-  signInWithPopup(auth, provider)
-    .then(result => {
-      const user = result.user;
-      return setDoc(doc(db, 'kullanicilar', user.uid), {
-        uid: user.uid,
-        kullaniciAdi: user.displayName || 'User' + user.uid.slice(0, 5),
-        bio: '',
-        proUye: false,
-        kayitTarihi: new Date()
-      }, { merge: true }).then(() => window.location.href = '/');
-    })
-    .catch(error => alert('Google Sign-In failed: ' + error.message));
+export async function googleSignIn() {
+  const result = await signInWithPopup(auth, provider);
+  const user = result.user;
+  await setDoc(doc(db, 'kullanicilar', user.uid), {
+    uid: user.uid,
+    kullaniciAdi: user.displayName || 'User' + user.uid.slice(0, 5),
+    bio: '',
+    proUye: false,
+    kayitTarihi: new Date()
+  }, { merge: true });
+  window.location.href = '/';
 }
 
 export function logout() {
   auth.signOut().then(() => window.location.href = '/');
 }
+
+auth.onAuthStateChanged(user => {
+  const authLink = document.getElementById('auth-link');
+  if (user) {
+    authLink.textContent = 'Çıkış';
+    authLink.onclick = logout;
+  } else {
+    authLink.textContent = 'Giriş';
+    authLink.href = '/giris';
+  }
+});
