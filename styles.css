@@ -22,11 +22,11 @@ h1 {
   justify-content: center;
 }
 nav {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 10px;
   margin-top: 10px;
-  justify-content: center;
+  justify-items: center;
 }
 nav a {
   color: white;
@@ -44,11 +44,8 @@ nav a:hover {
   color: #d1d5db;
 }
 nav a i, label i, button i, h2 i, h3 i {
-  font-family: 'Font Awesome 6 Free', sans-serif;
-  font-weight: 900;
   font-size: 1.2em;
   min-width: 20px;
-  font-display: block;
 }
 main {
   max-width: 900px;
@@ -106,18 +103,14 @@ button:active {
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
+  margin: 20px auto;
 }
 .spinner.hidden {
   display: none;
 }
 @keyframes spin {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 #ideas, #comments, #user-ideas {
   display: grid;
@@ -166,7 +159,7 @@ label {
     font-size: 1.5em;
   }
   nav {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     gap: 5px;
   }
   nav a {
