@@ -20,25 +20,27 @@ async function loadProfile(userId) {
       return;
     }
     const userData = userDoc.data();
-    usernameInput.value = userData.kullaniciAdi;
-    displayNameInput.value = userData.gorunenAd || userData.kullaniciAdi;
-    bioInput.value = userData.bio || '';
-    profileImage.src = userData.profilResmi || 'https://via.placeholder.com/100';
-    const q = query(collection(db, 'fikirler'), where('olusturanId', '==', userId));
-    const querySnapshot = await getDocs(q);
-    userIdeasDiv.innerHTML = querySnapshot.empty ? '<p>Henüz fikriniz yok.</p>' : '';
-    querySnapshot.forEach(doc => {
-      const idea = doc.data();
-      const div = document.createElement('div');
-      div.className = 'idea';
-      div.innerHTML = `
-        <h3><a href="/fikir/${doc.id}">${idea.baslik}</a></h3>
-        <p>${idea.aciklama}</p>
-        <p>Kategori: ${idea.kategori}</p>
-        <p><i class="fas fa-thumbs-up"></i> Oy: ${idea.oySayisi} | <i class="fas fa-comment"></i> Yorum: ${idea.yorumSayisi}</p>
-      `;
-      userIdeasDiv.appendChild(div);
-    });
+    if (usernameInput) usernameInput.value = userData.kullaniciAdi;
+    if (displayNameInput) displayNameInput.value = userData.gorunenAd || userData.kullaniciAdi;
+    if (bioInput) bioInput.value = userData.bio || '';
+    if (profileImage) profileImage.src = userData.profilResmi || 'https://via.placeholder.com/100';
+    if (userIdeasDiv) {
+      const q = query(collection(db, 'fikirler'), where('olusturanId', '==', userId));
+      const querySnapshot = await getDocs(q);
+      userIdeasDiv.innerHTML = querySnapshot.empty ? '<p>Henüz fikriniz yok.</p>' : '';
+      querySnapshot.forEach(doc => {
+        const idea = doc.data();
+        const div = document.createElement('div');
+        div.className = 'idea';
+        div.innerHTML = `
+          <h3><a href="/fikir/${doc.id}">${idea.baslik}</a></h3>
+          <p>${idea.aciklama}</p>
+          <p>Kategori: ${idea.kategori}</p>
+          <p><i class="fas fa-thumbs-up"></i> Oy: ${idea.oySayisi} | <i class="fas fa-comment"></i> Yorum: ${idea.yorumSayisi}</p>
+        `;
+        userIdeasDiv.appendChild(div);
+      });
+    }
   } catch (error) {
     console.error('Profil yükleme hatası:', error);
     alert('Profil yüklenemedi: ' + error.message);
@@ -94,7 +96,7 @@ if (uploadImageButton && profileImageInput) {
       }, { merge: true });
       profileImage.src = downloadURL;
       alert('Profil resmi yüklendi!');
-    } else {
+    } catch (error) {
       console.error('Resim yükleme hatası:', error);
       alert('Resim yükleme başarısız: ' + error.message);
     }
