@@ -8,37 +8,52 @@ const provider = new GoogleAuthProvider();
 setPersistence(auth, browserLocalPersistence)
   .catch(error => console.error('Oturum kalıcılığı ayarlanamadı:', error));
 
-// Oturum durumunu kontrol et
+// Oturum durumunu güncelle
 function updateAuthUI(user) {
   const authLink = document.getElementById('auth-link');
   const spinner = document.getElementById('loading-spinner');
   const main = document.querySelector('main');
   if (!authLink || !spinner || !main) {
-    console.error('auth-link, spinner veya main bulunamadı');
+    console.warn('auth-link, spinner veya main bulunamadı, UI güncellenmedi');
     return;
   }
 
-  if (user) {
-    authLink.innerHTML = '<i class="fas fa-sign-out-alt"></i> Çıkış';
-    authLink.href = '#'; // Çıkış için href kaldırmak
-    authLink.onclick = (e) => {
-      e.preventDefault();
-      logout();
-    };
-  } else {
-    authLink.innerHTML = '<i class="fas fa-sign-in-alt"></i> Giriş';
-    authLink.href = '/giris';
-    authLink.onclick = null;
+  try {
+    if (user) {
+      authLink.innerHTML = '<i class="fas fa-sign-out-alt"></i> Çıkış';
+      authLink.href = '#';
+      authLink.onclick = (e) => {
+        e.preventDefault();
+        logout();
+      };
+    } else {
+      authLink.innerHTML = '<i class="fas fa-sign-in-alt"></i> Giriş';
+      authLink.href = '/giris';
+      authLink.onclick = null;
+    }
+    spinner.classList.add('hidden');
+    main.classList.remove('hidden');
+  } catch (error) {
+    console.error('UI güncelleme hatası:', error);
+    spinner.classList.add('hidden');
+    main.classList.remove('hidden');
   }
-  spinner.classList.add('hidden');
-  main.classList.remove('hidden');
 }
 
+// Oturum durumunu izle
 auth.onAuthStateChanged(user => {
   updateAuthUI(user);
+}, error => {
+  console.error('onAuthStateChanged hatası:', error);
+  const spinner = document.getElementById('loading-spinner');
+  const main = document.querySelector('main');
+  if (spinner && main) {
+    spinner.classList.add('hidden');
+    main.classList.remove('hidden');
+  }
 });
 
-// Tüm bağlantılar için yönlendirme
+// Bağlantılar için yönlendirme
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('a:not(#auth-link)').forEach(link => {
     link.addEventListener('click', (e) => {
