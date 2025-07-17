@@ -12,6 +12,7 @@
     <h1><i class="fas fa-lightbulb"></i> Thinkify</h1>
     <nav>
       <a href="/"><i class="fas fa-home"></i> Anasayfa</a>
+      <a href="/akis"><i class="fas fa-stream"></i> Akış</a>
       <a href="/paylas"><i class="fas fa-share"></i> Fikir Paylaş</a>
       <a href="/profil"><i class="fas fa-user"></i> Profil</a>
       <a href="/pro"><i class="fas fa-star"></i> Pro</a>
@@ -37,9 +38,19 @@
         <button type="submit"><i class="fas fa-save"></i> Güncelle</button>
       </form>
     </div>
+    <h3><i class="fas fa-user-friends"></i> Takip Ettiklerim</h3>
+    <div id="following"></div>
     <h3><i class="fas fa-lightbulb"></i> Fikirleriniz</h3>
     <div id="user-ideas"></div>
   </main>
+  <script type="module">
+    import { auth } from '/scripts/firebase.js';
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = '/giris';
+      }
+    });
+  </script>
   <script type="module" src="/scripts/profile.js"></script>
   <script type="module" src="/scripts/auth.js"></script>
 </body>

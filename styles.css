@@ -4,6 +4,7 @@
   --text: #1F2937;
   --card-bg: #F3F4F6;
   --accent: #FBBF24;
+  --vote-bg: #6B7280;
 }
 
 .dark-theme {
@@ -12,6 +13,7 @@
   --text: #F3F4F6;
   --card-bg: #374151;
   --accent: #FBBF24;
+  --vote-bg: #6B7280;
 }
 
 body {
@@ -124,6 +126,11 @@ button.accent {
   color: var(--text);
 }
 
+button.vote-button {
+  background: var(--vote-bg);
+  color: #FFFFFF;
+}
+
 button:hover {
   background: #1E40AF;
   transform: scale(1.05);
@@ -131,6 +138,10 @@ button:hover {
 
 button.accent:hover {
   background: #F59E0B;
+}
+
+button.vote-button:hover {
+  background: #4B5563;
 }
 
 button:active {
@@ -157,17 +168,19 @@ button:active {
   100% { transform: rotate(360deg); }
 }
 
-#ideas, #comments, #user-ideas {
+#ideas, #comments, #user-ideas, #feed, #following {
   display: grid;
-  gap: 15px;
+  gap: 20px;
 }
 
 .idea, .comment {
   border: 1px solid var(--text);
-  padding: 15px;
+  padding: 20px;
   border-radius: 8px;
   background: var(--card-bg);
   transition: transform 0.2s;
+  display: grid;
+  gap: 10px;
 }
 
 .idea:hover, .comment:hover {
@@ -177,13 +190,42 @@ button:active {
 .idea h3 {
   color: var(--text);
   font-weight: bold;
-  margin: 0 0 10px 0;
+  margin: 0;
   cursor: pointer;
 }
 
 .idea p {
   color: var(--text);
   margin: 5px 0;
+}
+
+.idea img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.vote-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.follow-button {
+  background: var(--primary);
+  color: #FFFFFF;
+}
+
+.follow-button.following {
+  background: #16A34A;
+}
+
+.follow-button:hover {
+  background: #1E40AF;
+}
+
+.follow-button.following:hover {
+  background: #15803D;
 }
 
 .profile-container {
@@ -294,6 +336,9 @@ label {
     width: 100%;
     max-width: 100%;
   }
+  .profile-container {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 600px) {
@@ -315,9 +360,6 @@ label {
   }
   main {
     padding: 10px;
-  }
-  .profile-container {
-    grid-template-columns: 1fr;
   }
   .thinkify-logo {
     font-size: 2em;

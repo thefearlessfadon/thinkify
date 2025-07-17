@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thinkify - Kullanıcı</title>
+  <title>Thinkify - Akış</title>
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
@@ -21,11 +21,8 @@
     </nav>
   </header>
   <main>
-    <h2 id="username"></h2>
-    <p>Bio: <span id="bio"></span></p>
-    <button id="follow-button" class="follow-button"><i class="fas fa-user-plus"></i> Takip Et</button>
-    <h3><i class="fas fa-lightbulb"></i> Fikirler</h3>
-    <div id="user-ideas"></div>
+    <h2><i class="fas fa-stream"></i> Akış</h2>
+    <div id="feed"></div>
   </main>
   <script type="module">
     import { auth } from '/scripts/firebase.js';
@@ -35,7 +32,7 @@
       }
     });
   </script>
-  <script type="module" src="/scripts/profile.js"></script>
+  <script type="module" src="/scripts/feed.js"></script>
   <script type="module" src="/scripts/auth.js"></script>
 </body>
 </html>

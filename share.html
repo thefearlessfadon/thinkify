@@ -12,6 +12,7 @@
     <h1><i class="fas fa-lightbulb"></i> Thinkify</h1>
     <nav>
       <a href="/"><i class="fas fa-home"></i> Anasayfa</a>
+      <a href="/akis"><i class="fas fa-stream"></i> Akış</a>
       <a href="/paylas"><i class="fas fa-share"></i> Fikir Paylaş</a>
       <a href="/profil"><i class="fas fa-user"></i> Profil</a>
       <a href="/pro"><i class="fas fa-star"></i> Pro</a>
@@ -42,11 +43,20 @@
         <option value="Oyun">Oyun</option>
         <option value="Sosyal İnovasyon">Sosyal İnovasyon</option>
       </select>
+      <input type="file" id="idea-image" accept="image/*">
       <button type="submit" id="share-button"><i class="fas fa-paper-plane"></i> Paylaş</button>
       <button type="button" id="cancel-button"><i class="fas fa-times"></i> İptal</button>
     </form>
     <div id="loading-spinner" class="spinner hidden"></div>
   </main>
+  <script type="module">
+    import { auth } from '/scripts/firebase.js';
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = '/giris';
+      }
+    });
+  </script>
   <script type="module" src="/scripts/ideas.js"></script>
   <script type="module" src="/scripts/auth.js"></script>
 </body>

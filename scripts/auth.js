@@ -1,9 +1,9 @@
 import { auth, db } from './firebase.js';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Oturum kalıcılığını ayarla
-setPersistence(auth, browserSessionPersistence).catch(error => {
+// Oturum kalıcılığını 1 ay için ayarla
+setPersistence(auth, browserLocalPersistence).catch(error => {
   console.error('Oturum kalıcılığı ayarlama hatası:', error);
 });
 
