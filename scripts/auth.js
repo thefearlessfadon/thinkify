@@ -16,9 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function updateAuthLinks(user) {
   console.log('updateAuthLinks:', user ? 'Kullanıcı var: ' + user.uid : 'Kullanıcı yok');
-  const authLink = document.getElementById('auth-link');
-  const profileLink = document.getElementById('profile-link');
-  const feedLink = document.getElementById('feed-link');
+  const authLink = document.querySelector('a[href="/giris"], #auth-link');
+  const profileLink = document.querySelector('a[href="/profil"]');
+  const feedLink = document.querySelector('a[href="/akis"]');
   
   if (user) {
     if (authLink) {
@@ -43,7 +43,7 @@ function updateAuthLinks(user) {
       authLink.onclick = null;
     }
     if (profileLink) profileLink.style.display = 'none';
-    if (feedLink) feedLink.style.display = 'none';
+    if (feedLink) profileLink.style.display = 'none';
   }
 }
 
@@ -127,8 +127,10 @@ auth.onAuthStateChanged(user => {
       if (!auth.currentUser) {
         console.log('Kullanıcı giriş yapmamış, yönlendiriliyor: /giris');
         window.location.href = '/giris';
+      } else {
+        console.log('Oturum gecikmeli yüklendi, kullanıcı var:', auth.currentUser.uid);
       }
-    }, 500); // 500ms bekle, oturumun yüklenmesini sağla
+    }, 1000); // 1000ms bekle
   }
 });
 
