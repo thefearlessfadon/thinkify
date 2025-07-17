@@ -3,7 +3,6 @@
   --background: #FFFFFF;
   --text: #1F2937;
   --card-bg: #F3F4F6;
-  --accent: #FBBF24;
   --vote-bg: #6B7280;
 }
 
@@ -12,8 +11,7 @@
   --background: #1F2937;
   --text: #F3F4F6;
   --card-bg: #374151;
-  --accent: #FBBF24;
-  --vote-bg: #6B7280;
+  --vote-bg: #4B5563;
 }
 
 body {
@@ -29,11 +27,11 @@ body {
 header {
   background: var(--primary);
   color: #FFFFFF;
-  padding: 10px 20px;
+  padding: 15px 20px;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
@@ -48,7 +46,7 @@ h1 {
 nav {
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 10px;
   margin-top: 10px;
   flex-wrap: wrap;
 }
@@ -57,22 +55,18 @@ nav a, nav button {
   color: #FFFFFF;
   text-decoration: none;
   font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 8px;
   padding: 10px 15px;
   border-radius: 5px;
-  transition: background 0.3s, color 0.3s;
+  transition: background 0.3s;
   border: none;
   background: none;
   cursor: pointer;
-  min-width: 120px;
+  min-width: 100px;
   text-align: center;
 }
 
 nav a:hover, nav button:hover {
   background: rgba(255, 255, 255, 0.2);
-  color: #d1d5db;
 }
 
 main {
@@ -81,7 +75,6 @@ main {
   padding: 20px;
   background: var(--card-bg);
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 h2, h3 {
@@ -97,14 +90,13 @@ form {
   gap: 15px;
 }
 
-input, textarea, select, button {
+input, textarea, select {
   padding: 12px;
   font-size: 16px;
   border: 1px solid var(--text);
   border-radius: 5px;
   background: var(--background);
   color: var(--text);
-  box-sizing: border-box;
 }
 
 textarea {
@@ -117,25 +109,10 @@ button {
   color: #FFFFFF;
   border: none;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  justify-content: center;
   padding: 12px;
   border-radius: 5px;
-  transition: background 0.3s, transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: background 0.3s, transform 0.15s ease-in-out;
   min-width: 150px;
-}
-
-button.accent {
-  background: var(--accent);
-  color: var(--text);
-}
-
-button.vote-button {
-  background: var(--vote-bg);
-  color: #FFFFFF;
-  transition: background 0.3s, transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 button:hover {
@@ -143,8 +120,10 @@ button:hover {
   transform: scale(1.05);
 }
 
-button.accent:hover {
-  background: #F59E0B;
+button.vote-button {
+  background: var(--vote-bg);
+  color: #FFFFFF;
+  transition: background 0.3s, transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 button.vote-button:hover {
@@ -156,49 +135,24 @@ button.vote-button:active {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.spinner {
-  border: 4px solid var(--card-bg);
-  border-top: 4px solid var(--primary);
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  animation: spin 1s linear infinite;
-  margin: 10px auto;
-}
-
-.spinner.hidden {
-  display: none;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-#ideas, #comments, #user-ideas, #feed, #following {
+#ideas, #user-ideas {
   display: grid;
   gap: 20px;
 }
 
-.idea, .comment {
+.idea {
   border: 1px solid var(--text);
   padding: 15px;
   border-radius: 8px;
   background: var(--card-bg);
-  transition: transform 0.2s;
   display: grid;
   gap: 10px;
-}
-
-.idea:hover, .comment:hover {
-  transform: translateY(-2px);
 }
 
 .idea h3 {
   color: var(--text);
   font-weight: bold;
   margin: 0;
-  cursor: pointer;
   font-size: 1.2em;
 }
 
@@ -208,34 +162,10 @@ button.vote-button:active {
   font-size: 0.9em;
 }
 
-.idea img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 5px;
-  margin-top: 10px;
-}
-
 .vote-buttons {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-}
-
-.follow-button {
-  background: var(--primary);
-  color: #FFFFFF;
-}
-
-.follow-button.following {
-  background: #16A34A;
-}
-
-.follow-button:hover {
-  background: #1E40AF;
-}
-
-.follow-button.following:hover {
-  background: #15803D;
 }
 
 .profile-container {
@@ -243,10 +173,6 @@ button.vote-button:active {
   grid-template-columns: 150px 1fr;
   gap: 20px;
   align-items: start;
-}
-
-.profile-image {
-  text-align: center;
 }
 
 .profile-image img {
@@ -262,101 +188,13 @@ button.vote-button:active {
   width: 100%;
 }
 
-label {
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.login-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  gap: 40px;
-}
-
-.login-left {
-  flex: 1;
-  text-align: left;
-}
-
-.thinkify-logo {
-  font-size: 3em;
-  color: var(--primary);
-  font-weight: bold;
-}
-
-.slogan {
-  font-size: 1.5em;
-  color: var(--text);
-  margin-top: 10px;
-}
-
-.login-right {
-  flex: 1;
-  max-width: 400px;
-}
-
-.login-form, .register-form {
-  display: grid;
-  gap: 15px;
-  background: var(--background);
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.forgot-password {
-  color: var(--text);
-  text-decoration: none;
-  text-align: center;
-  font-size: 0.9em;
-}
-
-.forgot-password:hover {
-  text-decoration: underline;
-}
-
 .hidden {
   display: none;
 }
 
-.back-button {
-  background: var(--card-bg);
-  color: var(--text);
-}
-
-.back-button:hover {
-  background: #d1d5db;
-}
-
 @media (max-width: 800px) {
-  .login-container {
-    flex-direction: column;
-    text-align: center;
-  }
-  .login-left {
-    margin-bottom: 20px;
-  }
-  .login-right {
-    width: 100%;
-    max-width: 100%;
-  }
   .profile-container {
     grid-template-columns: 1fr;
-  }
-  nav a, nav button {
-    min-width: 100px;
-    padding: 8px 12px;
-  }
-  main {
-    margin: 10px;
-    padding: 15px;
   }
 }
 
@@ -369,25 +207,20 @@ label {
   }
   nav {
     flex-direction: column;
-    gap: 8px;
     align-items: center;
   }
   nav a, nav button {
-    padding: 10px;
     width: 100%;
-    min-width: 0;
-    text-align: center;
-    font-size: 0.9em;
+    padding: 10px;
   }
   main {
-    margin: 5px;
-    padding: 10px;
-    border-radius: 8px;
+    margin: 10px;
+    padding: 15px;
   }
   h2, h3 {
     font-size: 1.2em;
   }
-  .idea, .comment {
+  .idea {
     padding: 10px;
   }
   .idea h3 {
@@ -409,12 +242,6 @@ label {
     width: 80px;
     height: 80px;
   }
-  .thinkify-logo {
-    font-size: 1.8em;
-  }
-  .slogan {
-    font-size: 1.1em;
-  }
 }
 
 @media (max-width: 400px) {
@@ -431,7 +258,7 @@ label {
     padding: 6px;
     min-width: 90px;
   }
-  .idea, .comment {
+  .idea {
     padding: 8px;
   }
   .idea h3 {

@@ -3,58 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thinkify - Anasayfa</title>
-  <link rel="stylesheet" href="/styles.css">
+  <title>Thinkify - Ana Sayfa</title>
+  <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-  <header class="top-bar">
-    <button class="menu-toggle"><i class="fas fa-bars"></i></button>
-    <h1 class="logo"><i class="fas fa-lightbulb"></i> Thinkify</h1>
-    <div class="search-bar">
-      <input type="search" id="search-input" placeholder="Fikir ara...">
-    </div>
-    <div class="top-bar-actions">
-      <button id="chat-button" title="Sohbet"><i class="fas fa-comment-dots"></i></button>
-      <a href="/paylas" id="post-button" title="Fikir Paylaş"><i class="fas fa-share"></i></a>
-      <button id="notification-button" title="Bildirimler"><i class="fas fa-bell"></i></button>
-      <button id="profile-menu" title="Profil"><i class="fas fa-user"></i></button>
-    </div>
+  <header>
+    <h1><i class="fas fa-lightbulb"></i> Thinkify</h1>
+    <nav>
+      <a href="/" id="home-link"><i class="fas fa-home"></i> Anasayfa</a>
+      <a href="/profil" id="profile-link"><i class="fas fa-user"></i> Profil</a>
+      <a href="/akis" id="feed-link"><i class="fas fa-stream"></i> Akış</a>
+      <a href="/paylas" id="share-link"><i class="fas fa-share"></i> Fikir Paylaş</a>
+      <a href="/giris" id="auth-link"><i class="fas fa-sign-in-alt"></i> Giriş</a>
+      <button id="theme-toggle"><i class="fas fa-moon"></i> Siyah Tema</button>
+    </nav>
   </header>
-  <nav class="sidebar">
-    <ul class="sidebar-menu">
-      <li><a href="/" id="home-link"><i class="fas fa-home"></i> Anasayfa</a></li>
-      <li><a href="/popular" id="popular-link"><i class="fas fa-fire"></i> Popüler</a></li>
-      <li><a href="/explore" id="explore-link"><i class="fas fa-compass"></i> Keşfet</a></li>
-      <li><a href="/all" id="all-link"><i class="fas fa-list"></i> Tümü</a></li>
-      <li class="sidebar-section">
-        <h3>Communities</h3>
-        <ul>
-          <li><a href="/community/tech">Tech</a></li>
-          <li><a href="/community/sanat">Sanat</a></li>
-          <li><a href="/community/spor">Spor</a></li>
-        </ul>
-      </li>
-      <li class="sidebar-section">
-        <h3>Kaynaklar</h3>
-        <ul>
-          <li><a href="/about">Thinkify Hakkında</a></li>
-          <li><a href="/advertise">Reklam</a></li>
-          <li><a href="/help">Yardım</a></li>
-        </ul>
-      </li>
-    </ul>
-  </nav>
   <main>
-    <h2><i class="fas fa-lightbulb"></i> Fikirler</h2>
+    <h2><i class="fas fa-lightbulb"></i> En İyi Fikirler</h2>
     <div id="ideas"></div>
+    <div id="share-form" class="hidden">
+      <h3><i class="fas fa-plus"></i> Fikir Paylaş</h3>
+      <form>
+        <input type="text" id="idea-title" placeholder="Fikir başlığı" required>
+        <textarea id="idea-content" placeholder="Fikir içeriği" required></textarea>
+        <select id="idea-category">
+          <option value="teknoloji">Teknoloji</option>
+          <option value="girişim">Girişim</option>
+          <option value="eğitim">Eğitim</option>
+        </select>
+        <button type="submit"><i class="fas fa-paper-plane"></i> Paylaş</button>
+        <button type="button" id="cancel-share"><i class="fas fa-times"></i> İptal</button>
+      </form>
+    </div>
   </main>
-  <script type="module" src="/scripts/ideas.js"></script>
-  <script type="module" src="/scripts/auth.js"></script>
-  <script>
-    document.querySelector('.menu-toggle').addEventListener('click', () => {
-      document.querySelector('.sidebar').classList.toggle('open');
-    });
-  </script>
+  <script type="module" src="scripts/auth.js"></script>
+  <script type="module" src="scripts/ideas.js"></script>
 </body>
 </html>
