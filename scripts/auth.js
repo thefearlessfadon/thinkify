@@ -2,29 +2,48 @@ import { auth, db } from './firebase.js';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Oturum kalıcılığını 1 ay için ayarla
-setPersistence(auth, browserLocalPersistence).catch(error => {
-  console.error('Oturum kalıcılığı ayarlama hatası:', error);
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM yüklendi, oturum kalıcılığı ayarlanıyor');
+  setPersistence(auth, browserLocalPersistence)
+    .then(() => {
+      console.log('Oturum kalıcılığı ayarlandı: browserLocalPersistence');
+    })
+    .catch(error => {
+      console.error('Oturum kalıcılığı ayarlama hatası:', error);
+      alert('Oturum başlatma hatası: ' + error.message);
+    });
 });
 
-function updateAuthLink(user) {
+function updateAuthLinks(user) {
+  console.log('updateAuthLinks:', user ? 'Kullanıcı var: ' + user.uid : 'Kullanıcı yok');
   const authLink = document.getElementById('auth-link');
-  if (!authLink) return;
+  const profileLink = document.getElementById('profile-link');
+  const feedLink = document.getElementById('feed-link');
+  
   if (user) {
-    authLink.innerHTML = '<i class="fas fa-sign-out-alt"></i> Çıkış';
-    authLink.removeAttribute('href');
-    authLink.onclick = () => {
-      auth.signOut().then(() => {
-        window.location.href = '/giris';
-      }).catch(error => {
-        console.error('Çıkış hatası:', error);
-        alert('Çıkış başarısız: ' + error.message);
-      });
-    };
+    if (authLink) {
+      authLink.innerHTML = '<i class="fas fa-sign-out-alt"></i> Çıkış';
+      authLink.removeAttribute('href');
+      authLink.onclick = () => {
+        auth.signOut().then(() => {
+          console.log('Kullanıcı çıkış yaptı');
+          window.location.href = '/giris';
+        }).catch(error => {
+          console.error('Çıkış hatası:', error);
+          alert('Çıkış başarısız: ' + error.message);
+        });
+      };
+    }
+    if (profileLink) profileLink.style.display = 'block';
+    if (feedLink) feedLink.style.display = 'block';
   } else {
-    authLink.innerHTML = '<i class="fas fa-sign-in-alt"></i> Giriş';
-    authLink.href = '/giris';
-    authLink.onclick = null;
+    if (authLink) {
+      authLink.innerHTML = '<i class="fas fa-sign-in-alt"></i> Giriş';
+      authLink.href = '/giris';
+      authLink.onclick = null;
+    }
+    if (profileLink) profileLink.style.display = 'none';
+    if (feedLink) feedLink.style.display = 'none';
   }
 }
 
@@ -44,15 +63,19 @@ function toggleTheme() {
 
 export async function login(email, password) {
   try {
+    console.log('Giriş yapılıyor, email:', email);
     await signInWithEmailAndPassword(auth, email, password);
+    console.log('Giriş başarılı, yönlendiriliyor: /');
     window.location.href = '/';
   } catch (error) {
+    console.error('Giriş hatası:', error);
     throw error;
   }
 }
 
 export async function register(email, password, username, displayName) {
   try {
+    console.log('Kayıt olunuyor, email:', email, 'username:', username);
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
     await setDoc(doc(db, 'kullanicilar', user.uid), {
@@ -64,22 +87,29 @@ export async function register(email, password, username, displayName) {
       proUye: false,
       kayitTarihi: new Date()
     });
+    console.log('Kayıt başarılı, kullanıcı ID:', user.uid);
     window.location.href = '/';
   } catch (error) {
+    console.error('Kayıt hatası:', error);
     throw error;
   }
 }
 
 export async function resetPassword(email) {
   try {
+    console.log('Şifre sıfırlama e-postası gönderiliyor, email:', email);
     await sendPasswordResetEmail(auth, email);
+    console.log('Şifre sıfırlama e-postası gönderildi');
   } catch (error) {
+    console.error('Şifre sıfırlama hatası:', error);
     throw error;
   }
 }
 
 export function logout() {
+  console.log('Çıkış yapılıyor');
   auth.signOut().then(() => {
+    console.log('Çıkış başarılı, yönlendiriliyor: /giris');
     window.location.href = '/giris';
   }).catch(error => {
     console.error('Çıkış hatası:', error);
@@ -90,18 +120,21 @@ export function logout() {
 // Oturum durumu kontrolü
 auth.onAuthStateChanged(user => {
   console.log('onAuthStateChanged:', user ? 'Kullanıcı var: ' + user.uid : 'Kullanıcı yok');
-  const publicPages = ['/giris', '/login.html'];
+  const publicPages = ['/giris', '/login.html', '/kayit', '/sifremi-unuttum'];
+  updateAuthLinks(user);
   if (!user && !publicPages.includes(window.location.pathname)) {
-    console.log('Kullanıcı giriş yapmamış, yönlendiriliyor: /giris');
-    window.location.href = '/giris';
-  } else {
-    updateAuthLink(user);
+    setTimeout(() => {
+      if (!auth.currentUser) {
+        console.log('Kullanıcı giriş yapmamış, yönlendiriliyor: /giris');
+        window.location.href = '/giris';
+      }
+    }, 500); // 500ms bekle, oturumun yüklenmesini sağla
   }
 });
 
 // Tema kontrolü
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('DOM yüklendi, auth-link ve tema kontrol ediliyor');
+  console.log('DOM yüklendi, tema kontrol ediliyor');
   const themeToggle = document.getElementById('theme-toggle');
   if (themeToggle) {
     const savedTheme = localStorage.getItem('theme');
