@@ -171,7 +171,7 @@ if (ideasDiv) {
           </div>
           <form class="comment-form-${doc.id}">
             <textarea placeholder="Yorumunuzu yazın" required></textarea>
-            <button type="submit" class="accent"><i class="fas fa-comment"></i> Yorum Yap</button>
+            <button type="submit" class="vote-button"><i class="fas fa-comment"></i> Yorum Yap</button>
           </form>
         `;
         ideasDiv.appendChild(div);
