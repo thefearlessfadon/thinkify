@@ -125,7 +125,7 @@ if (uploadImageButton && profileImageInput) {
       return;
     }
     if (file.size > 2 * 1024 * 1024) {
-      alert('Resim boyutu 2MB'dan küçük olmalı!');
+      alert('Resim boyutu 2MB dan küçük olmalı!');
       return;
     }
     if (!file.type.startsWith('image/')) {
