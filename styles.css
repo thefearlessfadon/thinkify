@@ -1,7 +1,7 @@
 :root {
   --primary: #2563EB;
   --background: #FFFFFF;
-  --text: #1F2937;
+  --text: #374151;
   --card-bg: #F3F4F6;
   --accent: #FBBF24;
   --vote-bg: #6B7280;
@@ -25,57 +25,157 @@ body {
   transition: background 0.3s, color 0.3s;
 }
 
-header {
-  background: var(--primary);
-  color: #FFFFFF;
+.top-bar {
+  background: var(--background);
+  color: var(--text);
   padding: 10px 20px;
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-h1 {
+.logo {
   margin: 0;
   font-size: 1.8em;
   display: flex;
   align-items: center;
   gap: 10px;
-  justify-content: center;
 }
 
-nav {
+.search-bar {
+  flex: 1;
+  max-width: 400px;
+  margin: 0 20px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid var(--text);
+  border-radius: 5px;
+  background: var(--background);
+  color: var(--text);
+}
+
+.top-bar-actions {
   display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 10px;
-  flex-wrap: wrap;
+  gap: 10px;
 }
 
-nav a, nav button {
-  color: #FFFFFF;
+.top-bar-actions button, .top-bar-actions a {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 1.2em;
+  cursor: pointer;
+  padding: 8px;
+  transition: color 0.3s, transform 0.15s ease-in-out;
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.top-bar-actions button:hover, .top-bar-actions a:hover {
+  color: var(--primary);
+  transform: scale(1.1);
+}
+
+.menu-toggle {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 1.5em;
+  cursor: pointer;
+  padding: 8px;
+  min-width: 48px;
+  min-height: 48px;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background: var(--background);
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 999;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 20px;
+  margin: 60px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-menu li {
+  margin: 5px 0;
+}
+
+.sidebar-menu a {
+  color: var(--text);
   text-decoration: none;
   font-weight: bold;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 10px;
+  padding: 10px;
   border-radius: 5px;
   transition: background 0.3s, color 0.3s;
-  border: none;
-  background: none;
-  cursor: pointer;
 }
 
-nav a:hover, nav button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: #d1d5db;
+.sidebar-menu a:hover {
+  background: var(--card-bg);
+  color: var(--primary);
+}
+
+.sidebar-section {
+  margin-top: 20px;
+}
+
+.sidebar-section h3 {
+  font-size: 1.2em;
+  margin: 10px 0;
+  color: var(--text);
+}
+
+.sidebar-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-section ul li a {
+  font-size: 0.9em;
+  padding: 8px 10px;
 }
 
 main {
-  max-width: 900px;
-  margin: 20px auto;
+  margin-top: 70px;
+  margin-left: 20px;
+  margin-right: 20px;
   padding: 20px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
   background: var(--card-bg);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -119,6 +219,8 @@ button {
   padding: 12px;
   border-radius: 5px;
   transition: background 0.3s, transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  min-width: 48px;
+  min-height: 48px;
 }
 
 button.accent {
@@ -129,7 +231,6 @@ button.accent {
 button.vote-button {
   background: var(--vote-bg);
   color: #FFFFFF;
-  transition: background 0.3s, transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 button:hover {
@@ -263,7 +364,7 @@ label {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: calc(100vh - 70px);
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
@@ -340,26 +441,59 @@ label {
   .profile-container {
     grid-template-columns: 1fr;
   }
+  .top-bar {
+    padding: 10px;
+  }
+  .search-bar {
+    max-width: 200px;
+    margin: 0 10px;
+  }
+  .top-bar-actions button, .top-bar-actions a {
+    font-size: 1em;
+    padding: 6px;
+  }
 }
 
 @media (max-width: 600px) {
-  header {
-    padding: 10px;
+  .top-bar {
+    flex-wrap: wrap;
+    gap: 10px;
   }
-  h1 {
+  .logo {
     font-size: 1.5em;
   }
-  nav {
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
+  .search-bar {
+    order: 1;
+    flex: 1 1 100%;
+    max-width: 100%;
   }
-  nav a, nav button {
+  .top-bar-actions {
+    gap: 5px;
+  }
+  .top-bar-actions button, .top-bar-actions a {
+    font-size: 0.9em;
+    padding: 5px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+  .sidebar {
+    width: 200px;
+  }
+  .sidebar-menu {
+    padding: 10px;
+    margin-top: 60px;
+  }
+  .sidebar-menu a {
     padding: 8px;
-    width: 100%;
-    text-align: center;
+    font-size: 0.9em;
+  }
+  .sidebar-section h3 {
+    font-size: 1.1em;
   }
   main {
+    margin-top: 100px;
+    margin-left: 10px;
+    margin-right: 10px;
     padding: 10px;
   }
   .thinkify-logo {

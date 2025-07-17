@@ -8,49 +8,53 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-  <header>
-    <h1><i class="fas fa-lightbulb"></i> Thinkify</h1>
-    <nav>
-      <a href="/"><i class="fas fa-home"></i> Anasayfa</a>
-      <a href="/akis"><i class="fas fa-stream"></i> Akış</a>
-      <a href="/paylas"><i class="fas fa-share"></i> Fikir Paylaş</a>
-      <a href="/profil"><i class="fas fa-user"></i> Profil</a>
-      <a href="/pro"><i class="fas fa-star"></i> Pro</a>
-      <a href="/giris" id="auth-link"><i class="fas fa-sign-in-alt"></i> Giriş</a>
-      <button id="theme-toggle"><i class="fas fa-moon"></i> Tema</button>
-    </nav>
+  <header class="top-bar">
+    <button class="menu-toggle"><i class="fas fa-bars"></i></button>
+    <h1 class="logo"><i class="fas fa-lightbulb"></i> Thinkify</h1>
+    <div class="search-bar">
+      <input type="search" id="search-input" placeholder="Fikir ara...">
+    </div>
+    <div class="top-bar-actions">
+      <button id="chat-button" title="Sohbet"><i class="fas fa-comment-dots"></i></button>
+      <a href="/paylas" id="post-button" title="Fikir Paylaş"><i class="fas fa-share"></i></a>
+      <button id="notification-button" title="Bildirimler"><i class="fas fa-bell"></i></button>
+      <button id="profile-menu" title="Profil"><i class="fas fa-user"></i></button>
+    </div>
   </header>
+  <nav class="sidebar">
+    <ul class="sidebar-menu">
+      <li><a href="/" id="home-link"><i class="fas fa-home"></i> Anasayfa</a></li>
+      <li><a href="/popular" id="popular-link"><i class="fas fa-fire"></i> Popüler</a></li>
+      <li><a href="/explore" id="explore-link"><i class="fas fa-compass"></i> Keşfet</a></li>
+      <li><a href="/all" id="all-link"><i class="fas fa-list"></i> Tümü</a></li>
+      <li class="sidebar-section">
+        <h3>Communities</h3>
+        <ul>
+          <li><a href="/community/tech">Tech</a></li>
+          <li><a href="/community/sanat">Sanat</a></li>
+          <li><a href="/community/spor">Spor</a></li>
+        </ul>
+      </li>
+      <li class="sidebar-section">
+        <h3>Kaynaklar</h3>
+        <ul>
+          <li><a href="/about">Thinkify Hakkında</a></li>
+          <li><a href="/advertise">Reklam</a></li>
+          <li><a href="/help">Yardım</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
   <main>
-    <h2><i class="fas fa-fire"></i> Popüler Fikirler</h2>
-    <select id="category-filter">
-      <option value="">Tüm Kategoriler</option>
-      <option value="Teknoloji">Teknoloji</option>
-      <option value="Eğitim">Eğitim</option>
-      <option value="Sağlık">Sağlık</option>
-      <option value="Sanat">Sanat</option>
-      <option value="Spor">Spor</option>
-      <option value="Çevre">Çevre</option>
-      <option value="Girişimcilik">Girişimcilik</option>
-      <option value="Yiyecek-İçecek">Yiyecek-İçecek</option>
-      <option value="Seyahat">Seyahat</option>
-      <option value="Eğlence">Eğlence</option>
-      <option value="Bilim">Bilim</option>
-      <option value="Moda">Moda</option>
-      <option value="Finans">Finans</option>
-      <option value="Oyun">Oyun</option>
-      <option value="Sosyal İnovasyon">Sosyal İnovasyon</option>
-    </select>
+    <h2><i class="fas fa-lightbulb"></i> Fikirler</h2>
     <div id="ideas"></div>
   </main>
-  <script type="module">
-    import { auth } from '/scripts/firebase.js';
-    auth.onAuthStateChanged(user => {
-      if (!user) {
-        window.location.href = '/giris';
-      }
-    });
-  </script>
   <script type="module" src="/scripts/ideas.js"></script>
   <script type="module" src="/scripts/auth.js"></script>
+  <script>
+    document.querySelector('.menu-toggle').addEventListener('click', () => {
+      document.querySelector('.sidebar').classList.toggle('open');
+    });
+  </script>
 </body>
 </html>
