@@ -17,11 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function updateAuthLinks(user) {
   console.log('updateAuthLinks:', user ? 'Kullanıcı var: ' + user.uid : 'Kullanıcı yok');
   const authLink = document.querySelector('a[href="/giris"], #auth-link');
-  const profileMenu = document.querySelector('#profile-menu');
-  const homeLink = document.querySelector('a[href="/"], #home-link');
-  const popularLink = document.querySelector('a[href="/popular"], #popular-link');
-  const exploreLink = document.querySelector('a[href="/explore"], #explore-link');
-  const allLink = document.querySelector('a[href="/all"], #all-link');
+  const profileLink = document.querySelector('a[href="/profil"]');
+  const feedLink = document.querySelector('a[href="/akis"]');
   
   if (user) {
     if (authLink) {
@@ -37,27 +34,16 @@ function updateAuthLinks(user) {
         });
       };
     }
-    if (profileMenu) {
-      profileMenu.style.display = 'block';
-      profileMenu.onclick = () => {
-        window.location.href = '/profil';
-      };
-    }
-    if (homeLink) homeLink.style.display = 'block';
-    if (popularLink) popularLink.style.display = 'block';
-    if (exploreLink) exploreLink.style.display = 'block';
-    if (allLink) allLink.style.display = 'block';
+    if (profileLink) profileLink.style.display = 'block';
+    if (feedLink) feedLink.style.display = 'block';
   } else {
     if (authLink) {
       authLink.innerHTML = '<i class="fas fa-sign-in-alt"></i> Giriş';
       authLink.href = '/giris';
       authLink.onclick = null;
     }
-    if (profileMenu) profileMenu.style.display = 'none';
-    if (homeLink) homeLink.style.display = 'block';
-    if (popularLink) popularLink.style.display = 'block';
-    if (exploreLink) exploreLink.style.display = 'block';
-    if (allLink) allLink.style.display = 'block';
+    if (profileLink) profileLink.style.display = 'none';
+    if (feedLink) profileLink.style.display = 'none';
   }
 }
 
@@ -144,7 +130,7 @@ auth.onAuthStateChanged(user => {
       } else {
         console.log('Oturum gecikmeli yüklendi, kullanıcı var:', auth.currentUser.uid);
       }
-    }, 1000);
+    }, 2000); // 2000ms bekle
   }
 });
 

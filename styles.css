@@ -1,7 +1,7 @@
 :root {
   --primary: #2563EB;
   --background: #FFFFFF;
-  --text: #374151;
+  --text: #1F2937;
   --card-bg: #F3F4F6;
   --accent: #FBBF24;
   --vote-bg: #6B7280;
@@ -23,159 +23,62 @@ body {
   background: var(--background);
   color: var(--text);
   transition: background 0.3s, color 0.3s;
+  min-height: 100vh;
 }
 
-.top-bar {
-  background: var(--background);
-  color: var(--text);
+header {
+  background: var(--primary);
+  color: #FFFFFF;
   padding: 10px 20px;
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.logo {
+h1 {
   margin: 0;
   font-size: 1.8em;
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.search-bar {
-  flex: 1;
-  max-width: 400px;
-  margin: 0 20px;
-}
-
-.search-bar input {
-  width: 100%;
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid var(--text);
-  border-radius: 5px;
-  background: var(--background);
-  color: var(--text);
-}
-
-.top-bar-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.top-bar-actions button, .top-bar-actions a {
-  background: none;
-  border: none;
-  color: var(--text);
-  font-size: 1.2em;
-  cursor: pointer;
-  padding: 8px;
-  transition: color 0.3s, transform 0.15s ease-in-out;
-  min-width: 48px;
-  min-height: 48px;
-  display: flex;
-  align-items: center;
   justify-content: center;
 }
 
-.top-bar-actions button:hover, .top-bar-actions a:hover {
-  color: var(--primary);
-  transform: scale(1.1);
-}
-
-.menu-toggle {
-  background: none;
-  border: none;
-  color: var(--text);
-  font-size: 1.5em;
-  cursor: pointer;
-  padding: 8px;
-  min-width: 48px;
-  min-height: 48px;
-}
-
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 250px;
-  height: 100%;
-  background: var(--background);
-  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
-  transform: translateX(-100%);
-  transition: transform 0.3s ease-in-out;
-  z-index: 999;
-}
-
-.sidebar.open {
-  transform: translateX(0);
-}
-
-.sidebar-menu {
-  list-style: none;
-  padding: 20px;
-  margin: 60px 0 0 0;
+nav {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+  flex-wrap: wrap;
 }
 
-.sidebar-menu li {
-  margin: 5px 0;
-}
-
-.sidebar-menu a {
-  color: var(--text);
+nav a, nav button {
+  color: #FFFFFF;
   text-decoration: none;
   font-weight: bold;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px;
+  gap: 8px;
+  padding: 10px 15px;
   border-radius: 5px;
   transition: background 0.3s, color 0.3s;
+  border: none;
+  background: none;
+  cursor: pointer;
+  min-width: 120px;
+  text-align: center;
 }
 
-.sidebar-menu a:hover {
-  background: var(--card-bg);
-  color: var(--primary);
-}
-
-.sidebar-section {
-  margin-top: 20px;
-}
-
-.sidebar-section h3 {
-  font-size: 1.2em;
-  margin: 10px 0;
-  color: var(--text);
-}
-
-.sidebar-section ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.sidebar-section ul li a {
-  font-size: 0.9em;
-  padding: 8px 10px;
+nav a:hover, nav button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #d1d5db;
 }
 
 main {
-  margin-top: 70px;
-  margin-left: 20px;
-  margin-right: 20px;
-  padding: 20px;
   max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 20px auto;
+  padding: 20px;
   background: var(--card-bg);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -201,10 +104,12 @@ input, textarea, select, button {
   border-radius: 5px;
   background: var(--background);
   color: var(--text);
+  box-sizing: border-box;
 }
 
 textarea {
   resize: vertical;
+  min-height: 100px;
 }
 
 button {
@@ -219,8 +124,7 @@ button {
   padding: 12px;
   border-radius: 5px;
   transition: background 0.3s, transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  min-width: 48px;
-  min-height: 48px;
+  min-width: 150px;
 }
 
 button.accent {
@@ -231,6 +135,7 @@ button.accent {
 button.vote-button {
   background: var(--vote-bg);
   color: #FFFFFF;
+  transition: background 0.3s, transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 button:hover {
@@ -277,7 +182,7 @@ button.vote-button:active {
 
 .idea, .comment {
   border: 1px solid var(--text);
-  padding: 20px;
+  padding: 15px;
   border-radius: 8px;
   background: var(--card-bg);
   transition: transform 0.2s;
@@ -294,11 +199,13 @@ button.vote-button:active {
   font-weight: bold;
   margin: 0;
   cursor: pointer;
+  font-size: 1.2em;
 }
 
 .idea p {
   color: var(--text);
   margin: 5px 0;
+  font-size: 0.9em;
 }
 
 .idea img {
@@ -311,6 +218,7 @@ button.vote-button:active {
 .vote-buttons {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .follow-button {
@@ -351,6 +259,7 @@ button.vote-button:active {
 
 .profile-image input {
   margin: 10px 0;
+  width: 100%;
 }
 
 label {
@@ -364,7 +273,7 @@ label {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 70px);
+  height: 100vh;
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
@@ -441,65 +350,94 @@ label {
   .profile-container {
     grid-template-columns: 1fr;
   }
-  .top-bar {
-    padding: 10px;
+  nav a, nav button {
+    min-width: 100px;
+    padding: 8px 12px;
   }
-  .search-bar {
-    max-width: 200px;
-    margin: 0 10px;
-  }
-  .top-bar-actions button, .top-bar-actions a {
-    font-size: 1em;
-    padding: 6px;
+  main {
+    margin: 10px;
+    padding: 15px;
   }
 }
 
 @media (max-width: 600px) {
-  .top-bar {
-    flex-wrap: wrap;
-    gap: 10px;
+  header {
+    padding: 10px;
   }
-  .logo {
+  h1 {
     font-size: 1.5em;
   }
-  .search-bar {
-    order: 1;
-    flex: 1 1 100%;
-    max-width: 100%;
+  nav {
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
   }
-  .top-bar-actions {
-    gap: 5px;
-  }
-  .top-bar-actions button, .top-bar-actions a {
-    font-size: 0.9em;
-    padding: 5px;
-    min-width: 40px;
-    min-height: 40px;
-  }
-  .sidebar {
-    width: 200px;
-  }
-  .sidebar-menu {
+  nav a, nav button {
     padding: 10px;
-    margin-top: 60px;
-  }
-  .sidebar-menu a {
-    padding: 8px;
+    width: 100%;
+    min-width: 0;
+    text-align: center;
     font-size: 0.9em;
-  }
-  .sidebar-section h3 {
-    font-size: 1.1em;
   }
   main {
-    margin-top: 100px;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  h2, h3 {
+    font-size: 1.2em;
+  }
+  .idea, .comment {
     padding: 10px;
   }
+  .idea h3 {
+    font-size: 1em;
+  }
+  .idea p {
+    font-size: 0.8em;
+  }
+  button {
+    padding: 10px;
+    min-width: 120px;
+    font-size: 0.9em;
+  }
+  .vote-button {
+    padding: 8px;
+    min-width: 100px;
+  }
+  .profile-image img {
+    width: 80px;
+    height: 80px;
+  }
   .thinkify-logo {
-    font-size: 2em;
+    font-size: 1.8em;
   }
   .slogan {
-    font-size: 1.2em;
+    font-size: 1.1em;
+  }
+}
+
+@media (max-width: 400px) {
+  nav a, nav button {
+    padding: 8px;
+    font-size: 0.8em;
+  }
+  button {
+    padding: 8px;
+    min-width: 100px;
+    font-size: 0.8em;
+  }
+  .vote-button {
+    padding: 6px;
+    min-width: 90px;
+  }
+  .idea, .comment {
+    padding: 8px;
+  }
+  .idea h3 {
+    font-size: 0.9em;
+  }
+  .idea p {
+    font-size: 0.7em;
   }
 }
