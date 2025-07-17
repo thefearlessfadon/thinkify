@@ -1,6 +1,19 @@
-import { auth, db } from './firebase.js';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, setPersistence, browserLocalPersistence, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBAIuCiOUDLY6ZKDBKS0561SlNgiDDvaak",
+  authDomain: "thinkify-2ed59.firebaseapp.com",
+  projectId: "thinkify-2ed59",
+  storageBucket: "thinkify-2ed59.firebasestorage.app",
+  messagingSenderId: "481098565530",
+  appId: "1:481098565530:web:7c6b8a6b5b3e4e9f8c7d2e"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM yüklendi, oturum kalıcılığı ayarlanıyor');
@@ -9,143 +22,68 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('Oturum kalıcılığı ayarlandı: browserLocalPersistence');
     })
     .catch(error => {
-      console.error('Oturum kalıcılığı ayarlama hatası:', error);
-      alert('Oturum başlatma hatası: ' + error.message);
+      console.error('Oturum kalıcılığı hatası:', error);
     });
-});
 
-function updateAuthLinks(user) {
-  console.log('updateAuthLinks:', user ? 'Kullanıcı var: ' + user.uid : 'Kullanıcı yok');
   const authLink = document.querySelector('a[href="/giris"], #auth-link');
   const profileLink = document.querySelector('a[href="/profil"]');
   const feedLink = document.querySelector('a[href="/akis"]');
-  
-  if (user) {
-    if (authLink) {
-      authLink.innerHTML = '<i class="fas fa-sign-out-alt"></i> Çıkış';
-      authLink.removeAttribute('href');
-      authLink.onclick = () => {
-        auth.signOut().then(() => {
-          console.log('Kullanıcı çıkış yaptı');
-          window.location.href = '/giris';
-        }).catch(error => {
+  const shareLink = document.querySelector('a[href="/paylas"]');
+
+  onAuthStateChanged(auth, (user) => {
+    console.log('onAuthStateChanged tetiklendi, user:', user ? user.uid : 'yok');
+    if (user) {
+      if (authLink) {
+        authLink.innerHTML = '<i class="fas fa-sign-out-alt"></i> Çıkış';
+        authLink.href = '#';
+        authLink.onclick = () => signOut(auth).then(() => window.location.href = '/giris').catch(error => {
           console.error('Çıkış hatası:', error);
           alert('Çıkış başarısız: ' + error.message);
         });
-      };
-    }
-    if (profileLink) profileLink.style.display = 'block';
-    if (feedLink) feedLink.style.display = 'block';
-  } else {
-    if (authLink) {
-      authLink.innerHTML = '<i class="fas fa-sign-in-alt"></i> Giriş';
-      authLink.href = '/giris';
-      authLink.onclick = null;
-    }
-    if (profileLink) profileLink.style.display = 'none';
-    if (feedLink) profileLink.style.display = 'none';
-  }
-}
-
-function toggleTheme() {
-  const body = document.body;
-  const themeToggle = document.getElementById('theme-toggle');
-  if (body.classList.contains('dark-theme')) {
-    body.classList.remove('dark-theme');
-    themeToggle.innerHTML = '<i class="fas fa-moon"></i> Siyah Tema';
-    localStorage.setItem('theme', 'light');
-  } else {
-    body.classList.add('dark-theme');
-    themeToggle.innerHTML = '<i class="fas fa-sun"></i> Beyaz Tema';
-    localStorage.setItem('theme', 'dark');
-  }
-}
-
-export async function login(email, password) {
-  try {
-    console.log('Giriş yapılıyor, email:', email);
-    await signInWithEmailAndPassword(auth, email, password);
-    console.log('Giriş başarılı, yönlendiriliyor: /');
-    window.location.href = '/';
-  } catch (error) {
-    console.error('Giriş hatası:', error);
-    throw error;
-  }
-}
-
-export async function register(email, password, username, displayName) {
-  try {
-    console.log('Kayıt olunuyor, email:', email, 'username:', username);
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-    await setDoc(doc(db, 'kullanicilar', user.uid), {
-      uid: user.uid,
-      kullaniciAdi: username,
-      gorunenAd: displayName || username,
-      bio: '',
-      profilResmi: '',
-      proUye: false,
-      kayitTarihi: new Date()
-    });
-    console.log('Kayıt başarılı, kullanıcı ID:', user.uid);
-    window.location.href = '/';
-  } catch (error) {
-    console.error('Kayıt hatası:', error);
-    throw error;
-  }
-}
-
-export async function resetPassword(email) {
-  try {
-    console.log('Şifre sıfırlama e-postası gönderiliyor, email:', email);
-    await sendPasswordResetEmail(auth, email);
-    console.log('Şifre sıfırlama e-postası gönderildi');
-  } catch (error) {
-    console.error('Şifre sıfırlama hatası:', error);
-    throw error;
-  }
-}
-
-export function logout() {
-  console.log('Çıkış yapılıyor');
-  auth.signOut().then(() => {
-    console.log('Çıkış başarılı, yönlendiriliyor: /giris');
-    window.location.href = '/giris';
-  }).catch(error => {
-    console.error('Çıkış hatası:', error);
-    alert('Çıkış başarısız: ' + error.message);
-  });
-}
-
-// Oturum durumu kontrolü
-auth.onAuthStateChanged(user => {
-  console.log('onAuthStateChanged:', user ? 'Kullanıcı var: ' + user.uid : 'Kullanıcı yok');
-  const publicPages = ['/giris', '/login.html', '/kayit', '/sifremi-unuttum'];
-  updateAuthLinks(user);
-  if (!user && !publicPages.includes(window.location.pathname)) {
-    setTimeout(() => {
-      if (!auth.currentUser) {
-        console.log('Kullanıcı giriş yapmamış, yönlendiriliyor: /giris');
-        window.location.href = '/giris';
-      } else {
-        console.log('Oturum gecikmeli yüklendi, kullanıcı var:', auth.currentUser.uid);
       }
-    }, 2000); // 2000ms bekle
-  }
-});
+      if (profileLink) profileLink.style.display = 'block';
+      if (feedLink) feedLink.style.display = 'block';
+      if (shareLink) shareLink.style.display = 'block';
+    } else {
+      if (authLink) {
+        authLink.innerHTML = '<i class="fas fa-sign-in-alt"></i> Giriş';
+        authLink.href = '/giris';
+        authLink.onclick = null;
+      }
+      if (profileLink) profileLink.style.display = 'none';
+      if (feedLink) feedLink.style.display = 'none';
+      if (shareLink) feedLink.style.display = 'none';
+    }
 
-// Tema kontrolü
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('DOM yüklendi, tema kontrol ediliyor');
+    // Yönlendirme kontrolü
+    const publicPages = ['/giris', '/login.html', '/kayit', '/sifremi-unuttum'];
+    if (!publicPages.includes(window.location.pathname)) {
+      setTimeout(() => {
+        console.log('Oturum kontrolü, currentUser:', auth.currentUser ? auth.currentUser.uid : 'yok');
+        if (!auth.currentUser) {
+          console.log('Kullanıcı giriş yapmamış, yönlendiriliyor: /giris');
+          window.location.href = '/giris';
+        } else {
+          console.log('Kullanıcı oturumu doğrulandı, yönlendirme yapılmadı');
+        }
+      }, 2000); // 2000ms bekle
+    }
+  });
+
   const themeToggle = document.getElementById('theme-toggle');
   if (themeToggle) {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
       document.body.classList.add('dark-theme');
       themeToggle.innerHTML = '<i class="fas fa-sun"></i> Beyaz Tema';
-    } else {
-      themeToggle.innerHTML = '<i class="fas fa-moon"></i> Siyah Tema';
     }
-    themeToggle.addEventListener('click', toggleTheme);
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      const isDark = document.body.classList.contains('dark-theme');
+      themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i> Beyaz Tema' : '<i class="fas fa-moon"></i> Siyah Tema';
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
   }
 });
+
+export { auth, db, signInWithEmailAndPassword, createUserWithEmailAndPassword };

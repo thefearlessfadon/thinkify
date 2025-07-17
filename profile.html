@@ -4,27 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thinkify - Profil</title>
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
   <header>
     <h1><i class="fas fa-lightbulb"></i> Thinkify</h1>
     <nav>
-      <a href="/"><i class="fas fa-home"></i> Anasayfa</a>
-      <a href="/paylas"><i class="fas fa-share"></i> Fikir Paylaş</a>
-      <a href="/profil"><i class="fas fa-user"></i> Profil</a>
-      <a href="/pro"><i class="fas fa-star"></i> Pro</a>
+      <a href="/" id="home-link"><i class="fas fa-home"></i> Anasayfa</a>
+      <a href="/profil" id="profile-link"><i class="fas fa-user"></i> Profil</a>
+      <a href="/akis" id="feed-link"><i class="fas fa-stream"></i> Akış</a>
+      <a href="/paylas" id="share-link"><i class="fas fa-share"></i> Fikir Paylaş</a>
       <a href="/giris" id="auth-link"><i class="fas fa-sign-in-alt"></i> Giriş</a>
-      <button id="theme-toggle"><i class="fas fa-moon"></i> Tema</button>
+      <button id="theme-toggle"><i class="fas fa-moon"></i> Siyah Tema</button>
     </nav>
   </header>
   <main>
-    <h2><i class="fas fa-cog"></i> Profil Ayarları</h2>
+    <h2><i class="fas fa-user"></i> Profil Ayarları</h2>
     <div class="profile-container">
       <div class="profile-image">
-        <img id="profile-image" src="" alt="Profil Resmi" onerror="this.src='https://via.placeholder.com/100'">
-        <input type="file" id="profile-image-input" accept="image/*">
+        <img id="profile-image" src="https://via.placeholder.com/100" alt="Profil Resmi">
+        <input type="file" id="profile-image-input" accept="image/*" class="hidden">
         <button id="upload-image-button"><i class="fas fa-upload"></i> Resim Yükle</button>
       </div>
       <form id="profile-form">
@@ -40,7 +40,7 @@
     <h3><i class="fas fa-lightbulb"></i> Fikirleriniz</h3>
     <div id="user-ideas"></div>
   </main>
-  <script type="module" src="/scripts/profile.js"></script>
-  <script type="module" src="/scripts/auth.js"></script>
+  <script type="module" src="scripts/auth.js"></script>
+  <script type="module" src="scripts/profile.js"></script>
 </body>
 </html>
