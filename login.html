@@ -8,36 +8,31 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-  <header>
-    <h1><i class="fas fa-lightbulb"></i> Thinkify</h1>
-    <nav>
-      <a href="/"><i class="fas fa-home"></i> Anasayfa</a>
-      <a href="/paylas"><i class="fas fa-share"></i> Fikir Paylaş</a>
-      <a href="/profil"><i class="fas fa-user"></i> Profil</a>
-      <a href="/pro"><i class="fas fa-star"></i> Pro</a>
-      <a href="/giris" id="auth-link"><i class="fas fa-sign-in-alt"></i> Giriş</a>
-      <button id="theme-toggle"><i class="fas fa-moon"></i> Tema</button>
-    </nav>
-  </header>
-  <main>
-    <h2><i class="fas fa-sign-in-alt"></i> Giriş Yap</h2>
-    <form id="login-form">
-      <input type="email" id="login-email" placeholder="E-posta" required>
-      <input type="password" id="login-password" placeholder="Şifre" required>
-      <button type="submit"><i class="fas fa-sign-in-alt"></i> Giriş</button>
-    </form>
-    <h2><i class="fas fa-user-plus"></i> Kayıt Ol</h2>
-    <form id="register-form">
-      <input type="text" id="username" placeholder="Kullanıcı Adı" required>
-      <input type="text" id="display-name" placeholder="Görünen Ad" required>
-      <input type="email" id="register-email" placeholder="E-posta" required>
-      <input type="password" id="register-password" placeholder="Şifre" required>
-      <button type="submit"><i class="fas fa-user-plus"></i> Kayıt Ol</button>
-    </form>
-    <button id="google-signin"><i class="fab fa-google"></i> Google ile Giriş</button>
+  <main class="login-container">
+    <div class="login-left">
+      <h1 class="thinkify-logo"><i class="fas fa-lightbulb"></i> Thinkify</h1>
+      <p class="slogan">Thinkify toplulukla birlikte düşünmeyi sağlar.</p>
+    </div>
+    <div class="login-right">
+      <form id="login-form" class="login-form">
+        <input type="email" id="login-email" placeholder="E-posta" required>
+        <input type="password" id="login-password" placeholder="Şifre" required>
+        <button type="submit" class="login-button"><i class="fas fa-sign-in-alt"></i> Giriş Yap</button>
+        <a href="#" id="forgot-password" class="forgot-password">Şifremi Unuttum</a>
+        <button type="button" id="show-register" class="register-button"><i class="fas fa-user-plus"></i> Yeni Hesap Oluştur</button>
+      </form>
+      <form id="register-form" class="register-form hidden">
+        <input type="text" id="username" placeholder="Kullanıcı Adı" required>
+        <input type="text" id="display-name" placeholder="Görünen Ad" required>
+        <input type="email" id="register-email" placeholder="E-posta" required>
+        <input type="password" id="register-password" placeholder="Şifre" required>
+        <button type="submit" class="register-button"><i class="fas fa-user-plus"></i> Kayıt Ol</button>
+        <button type="button" id="show-login" class="back-button"><i class="fas fa-arrow-left"></i> Geri</button>
+      </form>
+    </div>
   </main>
   <script type="module">
-    import { login, register, googleSignIn } from '/scripts/auth.js';
+    import { login, register, resetPassword } from '/scripts/auth.js';
     document.getElementById('login-form').addEventListener('submit', async e => {
       e.preventDefault();
       const email = document.getElementById('login-email').value;
@@ -45,6 +40,7 @@
       try {
         await login(email, password);
         alert('Giriş başarılı!');
+        window.location.href = '/';
       } catch (error) {
         alert('Giriş başarısız: ' + error.message);
       }
@@ -58,19 +54,33 @@
       try {
         await register(email, password, username, displayName);
         alert('Kayıt başarılı!');
+        window.location.href = '/';
       } catch (error) {
         alert('Kayıt başarısız: ' + error.message);
       }
     });
-    document.getElementById('google-signin').addEventListener('click', async () => {
+    document.getElementById('forgot-password').addEventListener('click', async e => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      if (!email) {
+        alert('Lütfen e-posta adresinizi girin!');
+        return;
+      }
       try {
-        await googleSignIn();
-        alert('Google ile giriş başarılı!');
+        await resetPassword(email);
+        alert('Şifre sıfırlama e-postası gönderildi!');
       } catch (error) {
-        alert('Google ile giriş başarısız: ' + error.message);
+        alert('Şifre sıfırlama başarısız: ' + error.message);
       }
     });
+    document.getElementById('show-register').addEventListener('click', () => {
+      document.getElementById('login-form').classList.add('hidden');
+      document.getElementById('register-form').classList.remove('hidden');
+    });
+    document.getElementById('show-login').addEventListener('click', () => {
+      document.getElementById('register-form').classList.add('hidden');
+      document.getElementById('login-form').classList.remove('hidden');
+    });
   </script>
-  <script type="module" src="/scripts/auth.js"></script>
 </body>
 </html>

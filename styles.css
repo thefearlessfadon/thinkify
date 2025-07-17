@@ -216,6 +216,86 @@ label {
   gap: 8px;
 }
 
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  gap: 40px;
+}
+
+.login-left {
+  flex: 1;
+  text-align: left;
+}
+
+.thinkify-logo {
+  font-size: 3em;
+  color: var(--primary);
+  font-weight: bold;
+}
+
+.slogan {
+  font-size: 1.5em;
+  color: var(--text);
+  margin-top: 10px;
+}
+
+.login-right {
+  flex: 1;
+  max-width: 400px;
+}
+
+.login-form, .register-form {
+  display: grid;
+  gap: 15px;
+  background: var(--background);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.forgot-password {
+  color: var(--text);
+  text-decoration: none;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+.hidden {
+  display: none;
+}
+
+.back-button {
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+.back-button:hover {
+  background: #d1d5db;
+}
+
+@media (max-width: 800px) {
+  .login-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .login-left {
+    margin-bottom: 20px;
+  }
+  .login-right {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 600px) {
   header {
     padding: 10px;
@@ -238,5 +318,11 @@ label {
   }
   .profile-container {
     grid-template-columns: 1fr;
+  }
+  .thinkify-logo {
+    font-size: 2em;
+  }
+  .slogan {
+    font-size: 1.2em;
   }
 }
